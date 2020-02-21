@@ -1,6 +1,6 @@
-def UBI(simu,period):
+def PolarCap(simu,vari,level,latpolar,period):
     """
-    Script calculates the Ural Blocking Index (SLP)
+    Script calculates average over the polar cap (set latitude)
     """
     ### Import modules
     import numpy as np
@@ -11,9 +11,14 @@ def UBI(simu,period):
     import read_SIT as THICK
     import read_SIC as CONC
     
-    ### Select variable
-    varia = 'SLP'
-    level = 'surface'
+    if any([vari=='T700',vari=='T500']):
+        varia = 'TEMP'
+        level = 'profile'
+    elif vari == 'U700':
+        varia = 'U'
+        level = 'profile'
+    else:
+        varia = vari
     
     ############################################################################### 
     ############################################################################### 
@@ -45,6 +50,20 @@ def UBI(simu,period):
     ### Check for missing data [ensembles,months,lat,lon]
     future[np.where(future <= -1e10)] = np.nan
     historical[np.where(historical <= -1e10)] = np.nan
+    
+    ### Check for 4D field
+    if vari == 'T700':
+        levq = np.where(lev == 700)[0]
+        future = future[:,:,levq,:,:].squeeze()
+        historical = historical[:,:,levq,:,:].squeeze()
+    elif vari == 'T500':
+        levq = np.where(lev == 500)[0]
+        future = future[:,:,levq,:,:].squeeze()
+        historical = historical[:,:,levq,:,:].squeeze()
+    elif vari == 'U700':
+        levq = np.where(lev == 700)[0]
+        future = future[:,:,levq,:,:].squeeze()
+        historical = historical[:,:,levq,:,:].squeeze()
     
     ############################################################################### 
     ############################################################################### 
@@ -110,19 +129,14 @@ def UBI(simu,period):
     ### Meshgrid for lat,lon
     lon2,lat2 = np.meshgrid(lon,lat)
     
-    ### Calculate UBI
-    lonq1 = np.where((lon >=0) & (lon <=90))[0]
-    lonq2 = np.where((lon >= 330) & (lon <= 360))[0]
-    lonq = np.append(lonq1,lonq2)
-    latq = np.where((lat >=45) & (lat <=80))[0]
-    anomlon = anom[:,:,lonq]
-    anomu = anomlon[:,latq,:]
-    lat2uq = lat2[latq,:]
-    lat2u = lat2uq[:,lonq]
-    ubi = UT.calc_weightedAve(anomu,lat2u)
+    ### Calculate SHI
+    latq = np.where((lat >= latpolar))[0]
+    anomp = anom[:,latq,:]
+    lat2p = lat2[latq,:]
+    polarave = UT.calc_weightedAve(anomp,lat2p)
     
-    print('\n========Calculated Ural Blocking Index=======\n')
-    return ubi
+    print('\n========Calculated Polar Cap Average========\n')
+    return polarave
 
 ### Test functions (do not use!)
-#ubi = UBI('AA-2090','DJF')
+#ave = PolarCap('AA-2090','T500','surface',65,'DJF')

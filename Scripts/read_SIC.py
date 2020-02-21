@@ -19,10 +19,10 @@ def readSIC(varid,timeperiod,level):
     ----------
     varid : string
         variable name to read
-    level : string
-        Height of variable (surface or profile)
     timeperiod : string
         Fu or Pd
+    level : string
+        Height of variable (surface or profile)
 
     Returns
     -------
@@ -37,7 +37,7 @@ def readSIC(varid,timeperiod,level):
     -----
     lat,lon,lev,var = readSIC(varid,timperiod,level)
     """
-    print('\n>>>>>>>>>> Using readSIT function!')
+    print('\n>>>>>>>>>> Using readSIC function!')
     
     ### Import modules
     import numpy as np

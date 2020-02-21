@@ -36,7 +36,6 @@ titletime = currentmn + '/' + currentdy + '/' + currentyr
 print('\n' '----Plotting Composites of Nudging-PAMIP - %s----' % titletime)
 
 ### Add parameters
-ensembles = 10
 su = [0,1,2,3,4,5]
 period = 'JF' 
 level = 'surface'

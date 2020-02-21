@@ -119,6 +119,7 @@ def SHI(simu,period):
     lat2s = lat2sq[:,lonq]
     shi = UT.calc_weightedAve(anoms,lat2s)
     
+    print('\n========Calculated Siberian High Index========\n')
     return shi
 
 ### Test functions (do not use!)
