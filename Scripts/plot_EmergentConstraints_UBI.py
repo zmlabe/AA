@@ -17,6 +17,7 @@ import scipy.stats as sts
 import calc_UBI as SB
 import calc_PolarCap as CAP
 import read_OBS as REAN
+import read_StationOBS as SOBS
 
 ### Define directories
 directoryfigure = '/home/zlabe/Desktop/AA/Emergent/UBI/'
@@ -33,7 +34,7 @@ print('\n' '----Plotting Scatter of Warming-High - %s----' % titletime)
 ### Add parameters
 datareader = True
 latpolar = 65.
-variable = 'THICK'
+variable = 'T2M'
 period = 'DJF' 
 level = 'surface'
 runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
@@ -90,6 +91,11 @@ oldthickr = np.nanmean(varr[:epochq])  # 1979-1988
 newthickr = np.nanmean(varr[-epochq:]) # 2008-2017
 diffr = newthickr - oldthickr
 
+### Calculate T2M station-based data sets
+if variable == 'T2M':
+    dataobs = SOBS.readStationData(['GISTEMP','Berkeley'],years)
+    diffobs = SOBS.calcStationEpoch(dataobs,epochq)
+
 ###############################################################################
 ###############################################################################
 ###############################################################################
@@ -100,6 +106,8 @@ elif variable == 'T500':
     xaxis = np.arange(0,2.1,0.1)
 elif variable == 'T700':
     xaxis = np.arange(0,4.2,0.1)
+elif variable == 'T2M':
+    xaxis = np.arange(0,10,0.1)
 slope,intercept,r_value,p_value,std_err = sts.linregress(meanPOL,meanSHI)
 linetrend = slope*xaxis + intercept
 
@@ -214,6 +222,37 @@ elif variable == 'T500':
     plt.ylim([-1,3])
     
     plt.xlabel(r'\textbf{$\bf{\Delta}$T500 [$\bf{^{\circ}}$C]}',
+                         color='k',size=11,labelpad=5)
+    plt.ylabel(r'\textbf{$\bf{\Delta}$Ural Blocking Index [hPa]}',
+                         color='k',size=11,labelpad=5)
+    
+    plt.text(0,2.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
+            color='k')
+    
+    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_PAMIP-Nudge_%s.png' % variable,
+                dpi=300)
+    
+elif variable == 'T2M':
+    plt.axvspan(diffobs.min(),diffobs.max(),alpha=0.6,color='darkgrey',
+                clip_on=False,linewidth=0)
+    plt.axvspan(diffe,diffr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.plot(xaxis,linetrend,linewidth=2,color='k')
+    
+    color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
+    for i,c in zip(range(len(runnames)),color):
+        plt.scatter(meanPOL[i],meanSHI[i],color=c,s=42,
+                    label=r'\textbf{%s}' % runnames[i],zorder=11,clip_on=False)
+        
+    leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
+                     bbox_to_anchor=(0.935,0.3),fancybox=True,ncol=1,frameon=False,
+                     handlelength=0,handletextpad=1)
+    
+    plt.xticks(np.arange(0,16,2),map(str,np.arange(0,16,2)),size=8)
+    plt.yticks(np.arange(-10,10,0.5),map(str,np.arange(-10,10,0.5)),size=8)
+    plt.xlim([0,10])
+    plt.ylim([-1,3])
+    
+    plt.xlabel(r'\textbf{$\bf{\Delta}$T2M [$\bf{^{\circ}}$C]}',
                          color='k',size=11,labelpad=5)
     plt.ylabel(r'\textbf{$\bf{\Delta}$Ural Blocking Index [hPa]}',
                          color='k',size=11,labelpad=5)

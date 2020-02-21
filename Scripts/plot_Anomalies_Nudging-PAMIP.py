@@ -37,7 +37,7 @@ print('\n' '----Plotting Composites of Nudging-PAMIP - %s----' % titletime)
 
 ### Add parameters
 su = [0,1,2,3,4,5]
-period = 'JF' 
+period = 'DJF' 
 level = 'surface'
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK']

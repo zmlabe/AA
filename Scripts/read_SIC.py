@@ -77,19 +77,19 @@ def readSIC(varid,timeperiod,level):
         data.close()
     elif level == 'profile': # 4d variables
         data = Dataset(filename,'r')
-        lev = data.variables['level'][:]
+        lev = data.variables['level'][:17] # goes to 10 hPa instead of 1 hPa
         lat = data.variables['latitude'][:]
         lon = data.variables['longitude'][:]
-        varq = data.variables['%s' % varid][:]
+        varq = data.variables['%s' % varid][:,:17,:,:] # goes to 10 hPa instead of 1 hPa
         data.close()
     elif level == 'zonmean': # 3d variables (zonal mean!)
         varidz = varid + '_' + level
         filename = totaldirectory + varidz + '_1700-2000.nc'
         data = Dataset(filename,'r')
-        lev = data.variables['level'][:]
+        lev = data.variables['level'][:17] # goes to 10 hPa instead of 1 hPa
         lat = data.variables['lat'][:]
         lon = data.variables['lon'][:]
-        varq = data.variables['%s' % varid][:].squeeze()
+        varq = data.variables['%s' % varid][:,:17,:,:].squeeze() # goes to 10 hPa instead of 1 hPa
         data.close()
     else:
         print(ValueError('Selected wrong height - (surface or profile!)!'))    
