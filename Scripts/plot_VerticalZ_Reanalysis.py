@@ -1,10 +1,10 @@
 """
-Script plots vertical profile of temperature change over epochs
+Script plots polar cap height change
 
 Notes
 -----
     Author : Zachary Labe
-    Date   : 20 February 2020
+    Date   : 23 February 2020
 """
 
 ### Import modules
@@ -26,13 +26,13 @@ currentdy = str(now.day)
 currentyr = str(now.year)
 currenttime = currentmn + '_' + currentdy + '_' + currentyr
 titletime = currentmn + '/' + currentdy + '/' + currentyr
-print('\n' '----Plotting Reanalysis vertical T - %s----' % titletime)
+print('\n' '----Plotting Reanalysis vertical Z - %s----' % titletime)
 
 ### Add parameters
-datareader = True
+datareader = False
 latpolar = 65.
-epochq = 10
-variable = 'TEMP'
+epochq = 15
+variable = 'GEOP'
 period = 'DJF' 
 level = 'profile'
 
@@ -54,12 +54,12 @@ if datareader == True:
 ###############################################################################
 ###############################################################################
 ### Calculate reanalysis epochs
-oldthicke = np.nanmean(varpole[:epochq],axis=0)   # 1979-1988
-newthicke = np.nanmean(varpole[-epochq:],axis=0)  # 2008-2017
+oldthicke = np.nanmean(varpole[:epochq],axis=0)   # 1979-1993
+newthicke = np.nanmean(varpole[-epochq:],axis=0)  # 2003-2017
 diffe = newthicke - oldthicke
 
-oldthickr = np.nanmean(varpolr[:epochq],axis=0)   # 1979-1988
-newthickr = np.nanmean(varpolr[-epochq:],axis=0)  # 2008-2017
+oldthickr = np.nanmean(varpolr[:epochq],axis=0)   # 1979-1993
+newthickr = np.nanmean(varpolr[-epochq:],axis=0)  # 2003-2017
 diffr = newthickr - oldthickr
 
 ### Significance testing
@@ -69,7 +69,7 @@ prunsr = UT.calc_FDR_ttest(varpolr[:epochq],varpolr[-epochq:],0.1)
 ############################################################################
 ############################################################################
 ############################################################################
-#### Plot temperature profile
+##### Plot temperature profile
 plt.rc('text',usetex=True)
 plt.rc('font',**{'family':'sans-serif','sans-serif':['Avant Garde']}) 
 
@@ -77,8 +77,8 @@ fig = plt.figure()
 ax1 = plt.subplot(121)
 
 ### Set limits for contours and colorbars
-limit = np.arange(-3,3.01,0.25)
-barlim = np.arange(-3,4,1)
+limit = np.arange(-120,121,10)
+barlim = np.arange(-120,121,60)
 zscale = np.array([1000,700,500,300,200,
                     100,50,30,10])
 timeqe,levqe = np.meshgrid(late,leve)
@@ -121,8 +121,8 @@ cs.set_cmap(cmocean.cm.balance)
 ax1 = plt.subplot(122)
 
 ### Set limits for contours and colorbars
-limit = np.arange(-3,3.01,0.25)
-barlim = np.arange(-3,4,1)
+limit = np.arange(-120,121,10)
+barlim = np.arange(-120,121,60)
 zscale = np.array([1000,700,500,300,200,
                     100,50,30,10])
 timeqr,levqr = np.meshgrid(latr,levr)
@@ -168,12 +168,12 @@ cbar.set_ticks(barlim)
 cbar.set_ticklabels(list(map(str,barlim))) 
 cbar.ax.tick_params(axis='x', size=.001,labelsize=6)
 cbar.outline.set_edgecolor('dimgrey')
-cbar.set_label(r'\textbf{[2017-2008]--[1988-1979] T $^\circ$C}',color='k',
+cbar.set_label(r'\textbf{[2017-2003]--[1993-1979] Z [m]}',color='k',
                          fontsize=6,labelpad=-27)
 
 plt.subplots_adjust(bottom=0.2)
 
-plt.savefig(directoryfigure + 'VerticalT_Epoch_Reanalysis.png',dpi=300)
+plt.savefig(directoryfigure + 'VerticalZ_Epoch_Reanalysis.png',dpi=300)
 
 ############################################################################
 ############################################################################
@@ -186,8 +186,8 @@ fig = plt.figure()
 ax1 = plt.subplot(121)
 
 ### Set limits for contours and colorbars
-limit = np.arange(-3,3.01,0.25)
-barlim = np.arange(-3,4,1)
+limit = np.arange(-120,121,10)
+barlim = np.arange(-120,121,60)
 zscale = np.array([1000,925,850,700,500,300,200])
 timeqe,levqe = np.meshgrid(late,leve)
 
@@ -241,8 +241,8 @@ cs.set_cmap(cmocean.cm.balance)
 ax1 = plt.subplot(122)
 
 ### Set limits for contours and colorbars
-limit = np.arange(-3,3.01,0.25)
-barlim = np.arange(-3,4,1)
+limit = np.arange(-120,121,10)
+barlim = np.arange(-120,121,60)
 zscale = np.array([1000,925,850,700,500,300,200])
 timeqr,levqr = np.meshgrid(latr,levr)
 
@@ -299,9 +299,9 @@ cbar.set_ticks(barlim)
 cbar.set_ticklabels(list(map(str,barlim))) 
 cbar.ax.tick_params(axis='x', size=.001,labelsize=6)
 cbar.outline.set_edgecolor('dimgrey')
-cbar.set_label(r'\textbf{[2017-2008]--[1988-1979] T $^\circ$C}',color='k',
+cbar.set_label(r'\textbf{[2017-2003]--[1993-1979] Z [m]}',color='k',
                          fontsize=6,labelpad=-27)
 
 plt.subplots_adjust(bottom=0.2)
 
-plt.savefig(directoryfigure + 'VerticalT_Troposphere_Epoch_Reanalysis.png',dpi=300)
+plt.savefig(directoryfigure + 'VerticalZ_Troposphere_Epoch_Reanalysis.png',dpi=300)
