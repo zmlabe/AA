@@ -21,7 +21,7 @@ import read_SIT as THICK
 import read_SIC as CONC
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/Reanalysis/'
+directoryfigure = '/home/zlabe/Desktop/AA/Vertical_Model/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -36,7 +36,7 @@ print('\n' '----Plotting Vertical Warming- %s----' % titletime)
 datareader = True
 latpolar = 65.
 variable = 'TEMP'
-period = 'DJF' 
+period = 'FM' 
 level = 'profile'
 runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
             r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
@@ -155,12 +155,12 @@ def readData(simu,period,varia,level):
     return lat,lon,lev,anommean,nens,pruns,climo
 
 ### Call data
-#lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level)
-#lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level)
-#lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level)
-#lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level)
-#lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level)
-#lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level)
+lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level)
+lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level)
+lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level)
+lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level)
+lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level)
+lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level)
 
 ### Chunk data
 dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]

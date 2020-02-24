@@ -48,19 +48,19 @@ def readCOUPs(varid,timeperiod,level):
     ###########################################################################
     ### Call files for directory (1-100 members)
     if timeperiod == 'C_Fu':
-        experi = 'PAMIP-2.3-C'
+        experi = 'PAMIP-2.3'
         directorydata = '/seley/ypeings/simu/'
         totaldirectory = directorydata + experi + '/monthly/'
         filename = totaldirectory + varid + '_1900-2000.nc'
         print('-----------USING SC-WACCM4 SHORT COUPLED EXPERIMENTS (Future)!-----------')
     elif timeperiod == 'C_Pd':
-        experi = 'PAMIP-2.1-C'
+        experi = 'PAMIP-2.1'
         directorydata = '/seley/ypeings/simu/'
         totaldirectory = directorydata + experi + '/monthly/'
         filename = totaldirectory + varid + '_1900-2000.nc'
         print('-----------USING SC-WACCM4 SHORT COUPLED EXPERIMENTS (Present-Day)!-----------')
     elif timeperiod == 'C_Pi':
-        experi = 'PAMIP-2.2-C'
+        experi = 'PAMIP-2.2'
         directorydata = '/seley/ypeings/simu/'
         totaldirectory = directorydata + experi + '/monthly/'
         filename = totaldirectory + varid + '_1900-2000.nc'

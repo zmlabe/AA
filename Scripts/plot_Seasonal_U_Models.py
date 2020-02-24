@@ -1,9 +1,10 @@
 """
-Script plots polar cap heights in all model simulations
+Script plots zonal wind in all model experiments
+
 Notes
 -----
     Author : Zachary Labe
-    Date   : 23 February 2020
+    Date   : 24 February 2020
 """
 
 ### Import modules
@@ -20,7 +21,7 @@ import read_SIT as THICK
 import read_SIC as CONC
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/Reanalysis/'
+directoryfigure = '/home/zlabe/Desktop/AA/SeasonalCycle/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -29,21 +30,20 @@ currentdy = str(now.day)
 currentyr = str(now.year)
 currenttime = currentmn + '_' + currentdy + '_' + currentyr
 titletime = currentmn + '/' + currentdy + '/' + currentyr
-print('\n' '----Plotting Polar Cap Heights %s----' % titletime)
+print('\n' '----Plotting Vertical Zonal Wind- %s----' % titletime)
 
 ### Add parameters
 datareader = True
 latpolar = 65.
-variable = 'GEOP'
-period = 'timemonth' 
+variable = 'U'
+period = 'ND' 
 level = 'profile'
 runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
             r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
 runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC']
-monthstext = [r'OCT',r'NOV',r'DEC',r'JAN',r'FEB',r'MAR']
 
 ### Function to read in data
-def readData(simu,period,varia,level,latpolar):
+def readData(simu,period,varia,level):
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
@@ -86,6 +86,10 @@ def readData(simu,period,varia,level,latpolar):
         print('Calculating over %s months!' % period)
         futurem = np.nanmean(future[:,-3:],axis=1)
         historicalm = np.nanmean(historical[:,-3:],axis=1)
+    elif period == 'ND':
+        print('Calculating over %s months!' % period)
+        futurem = np.nanmean(future[:,-2:],axis=1)
+        historicalm = np.nanmean(historical[:,-2:],axis=1)
     elif period == 'D':
         print('Calculating over %s months!' % period)
         futurem = np.nanmean(future[:,-1:],axis=1)
@@ -130,36 +134,15 @@ def readData(simu,period,varia,level,latpolar):
         print('Calculating over %s months!' % period)
         futurem = np.nanmean(future[:,2:4],axis=1)
         historicalm = np.nanmean(historical[:,2:4],axis=1)
-    elif period == 'annual':
-        print('Calculating over %s months!' % period)
-        futurem = np.nanmean(future,axis=1)
-        historicalm = np.nanmean(historical,axis=1)
-    elif period == 'NONE':
-        print('Calculating over %s months!' % period)
-        futurem = future
-        historicalm = historical
-    elif period == 'timemonth':
-        print('Calculating over O,N,D,J,F,M months!')
-        futurem = np.append(future[:,-3:,:,:,:],future[:,:3,:,:,:],axis=1)
-        historicalm = np.append(historical[:,-3:,:,:,:],historical[:,:3,:,:,:],axis=1)
     else:
         print(ValueError('Selected wrong month period!'))
 
     ###########################################################################
     ###########################################################################
     ###########################################################################
-    ### Calculate polar cap
-    lon2,lat2 = np.meshgrid(lon,lat)
-    
-    ### Calculate SHI
-    latq = np.where((lat >= latpolar))[0]
-    lat2p = lat2[latq,:]
-        
-    futurep = futurem[:,:,:,latq,:]
-    futuremz = UT.calc_weightedAve(futurep,lat2p)
-    
-    historicalp = historicalm[:,:,:,latq,:]
-    historicalmz = UT.calc_weightedAve(historicalp,lat2p)
+    ### Calculate zonal means
+    futuremz = np.nanmean(futurem,axis=3)
+    historicalmz = np.nanmean(historicalm,axis=3)
     
     ### Calculate anomalies [ens,level,lat]
     anom = futuremz - historicalmz
@@ -176,12 +159,12 @@ def readData(simu,period,varia,level,latpolar):
     return lat,lon,lev,anommean,nens,pruns,climo
 
 ### Call data
-lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,latpolar)
-lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,latpolar)
-lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,latpolar)
-lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level,latpolar)
-lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level,latpolar)
-lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level,latpolar)
+lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level)
+lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level)
+lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level)
+lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level)
+lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level)
+lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level)
 
 ### Chunk data
 dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
@@ -220,13 +203,13 @@ if variable == 'TEMP':
     label = r'\textbf{$^{\circ}$C}'
     zscale = np.array([1000,925,850,700,500,300,200])
     latq,levq = np.meshgrid(lat,lev)
-elif variable == 'GEOP':
-    limit = np.arange(-50,50.1,2)
-    barlim = np.arange(-50,51,25)
+elif variable == 'U':
+    limit = np.arange(-2,2.01,0.1)
+    barlim = np.arange(-2,3,1)
     cmap = cmocean.cm.balance
-    label = r'\textbf{ZCAP [m]}'
+    label = r'\textbf{m/s}'
     zscale = np.array([1000,700,500,300,200,100,50,30,10])
-    timeq,levq = np.meshgrid(np.arange(6),lev)
+    latq,levq = np.meshgrid(lat,lev)
         
 fig = plt.figure()
 for i in range(len(runnames)):
@@ -280,10 +263,12 @@ for i in range(len(runnames)):
     ax1.yaxis.set_ticks_position('left')
     
     ### Plot contours
-    cs = plt.contourf(timeq,levq,var.transpose(),limit,extend='both')
-    cs1 = plt.contourf(timeq,levq,varnomask.transpose(),limit,extend='both',
-                       alpha=0.4,antialiased=True)
-#    cs2 = plt.contourf(timeq,levq,pvar,colors='None',
+    cs = plt.contourf(latq,levq,var,limit,extend='both')
+    cs1 = plt.contourf(latq,levq,varnomask,limit,extend='both',
+                       alpha=0.5,antialiased=True)
+    cs2 = plt.contour(latq,levq,clim,np.arange(-90,95,5),
+                      linewidths=0.3,colors='k',extend='both')
+#    cs2 = plt.contourf(latq,levq,pvar,colors='None',
 #                   hatches=['//////'],linewidths=0.4)
     cs.set_cmap(cmap)
     cs1.set_cmap(cmap)
@@ -291,17 +276,20 @@ for i in range(len(runnames)):
     plt.gca().invert_yaxis()
     plt.yscale('log',nonposy='clip')
     
-    plt.xticks(np.arange(0,6,1),monthstext,fontsize=4)
+    plt.xticks(np.arange(-90,91,15),map(str,np.arange(-90,91,15)),fontsize=6)
     plt.yticks(zscale,map(str,zscale),ha='right',fontsize=6)
     
-    plt.xlim([0,5])
-    plt.ylim([1000,10])
+    plt.xlim([0,90])
+    if variable == 'TEMP' or variable == 'GEOP':
+        plt.ylim([1000,200])
+    else:
+        plt.ylim([1000,10])
     plt.minorticks_off()
            
-    ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(0,1000),xytext=(0.98,0.93),
+    ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(80,200),xytext=(0.98,0.93),
          textcoords='axes fraction',color='k',fontsize=8,
          rotation=0,ha='right',va='center')
-    ax1.annotate(r'\textbf{[%s]}' % en,xy=(0,1000),xytext=(0.02,0.93),
+    ax1.annotate(r'\textbf{[%s]}' % en,xy=(80,200),xytext=(0.02,0.93),
          textcoords='axes fraction',color='dimgrey',fontsize=8,
          rotation=0,ha='left',va='center')
 
@@ -319,5 +307,6 @@ cbar.ax.tick_params(axis='x', size=.001,labelsize=7)
 cbar.outline.set_edgecolor('dimgrey')
     
 plt.subplots_adjust(bottom=0.17,hspace=0.08,wspace=0.08)    
-plt.savefig(directoryfigure + 'VerticalModels_ZCAP_Oct-Apr.png',dpi=300)
+plt.savefig(directoryfigure + 'VerticalModels_U_%s.png' % period,
+            dpi=300)
 print('Completed: Script done!')

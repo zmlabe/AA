@@ -32,9 +32,9 @@ titletime = currentmn + '/' + currentdy + '/' + currentyr
 print('\n' '----Plotting Scatter of Warming-High - %s----' % titletime)
 
 ### Add parameters
-datareader = False
+datareader = True
 latpolar = 65.
-variable = 'T2M'
+variable = 'THICK'
 period = 'DJF' 
 level = 'surface'
 runnames = [r'AA-2030',r'AA-2060',r'AA-2090',

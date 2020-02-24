@@ -37,10 +37,11 @@ print('\n' '----Plotting Composites of Nudging-PAMIP - %s----' % titletime)
 
 ### Add parameters
 su = [0,1,2,3,4,5]
-period = 'DJF' 
+period = 'OND' 
 level = 'surface'
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK']
+varnames = ['V700']
 runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
             r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
 
@@ -51,6 +52,9 @@ def readData(simu,period,vari,level):
         level = 'profile'
     elif vari == 'U700':
         varia = 'U'
+        level = 'profile'
+    elif any([vari=='V925',vari=='V700']):
+        varia = 'V'
         level = 'profile'
     else:
         varia = vari
@@ -94,6 +98,14 @@ def readData(simu,period,vari,level):
         future = future[:,:,levq,:,:].squeeze()
         historical = historical[:,:,levq,:,:].squeeze()
     elif vari == 'U700':
+        levq = np.where(lev == 700)[0]
+        future = future[:,:,levq,:,:].squeeze()
+        historical = historical[:,:,levq,:,:].squeeze()
+    elif vari == 'V925':
+        levq = np.where(lev == 925)[0]
+        future = future[:,:,levq,:,:].squeeze()
+        historical = historical[:,:,levq,:,:].squeeze()
+    elif vari == 'V700':
         levq = np.where(lev == 700)[0]
         future = future[:,:,levq,:,:].squeeze()
         historical = historical[:,:,levq,:,:].squeeze()
@@ -238,6 +250,16 @@ for rr in range(len(varnames)):
     elif varnames[rr] == 'U10':
         limit = np.arange(-5,5.1,0.25)
         barlim = np.arange(-5,6,5)
+        cmap = cmocean.cm.balance
+        label = r'\textbf{m/s}'
+    elif varnames[rr] == 'V925':
+        limit = np.arange(-1,1.1,0.05)
+        barlim = np.arange(-1,2,1)
+        cmap = cmocean.cm.balance
+        label = r'\textbf{m/s}'
+    elif varnames[rr] == 'V700':
+        limit = np.arange(-1,1.1,0.05)
+        barlim = np.arange(-1,2,1)
         cmap = cmocean.cm.balance
         label = r'\textbf{m/s}'
     elif varnames[rr] == 'SLP':
