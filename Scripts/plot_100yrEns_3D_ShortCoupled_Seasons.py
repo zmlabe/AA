@@ -1,11 +1,10 @@
 """
-Script plots anomalies for multiple SC-WACCM4 experiments from PAMIP and AA
-nudging from Peings et al. 2019, [GRL]
+Script plots anomalies for 100 year periods in the short coupled experiments
 
 Notes
 -----
     Author : Zachary Labe
-    Date   : 18 February 2020
+    Date   : 25 February 2020
 """
 
 ### Import modules
@@ -15,16 +14,10 @@ import matplotlib.pyplot as plt
 import cmocean
 from mpl_toolkits.basemap import Basemap, addcyclic, shiftgrid
 import calc_Utilities as UT
-import scipy.signal as SS
-import scipy.stats as sts
-import read_CTLNQ as CONT
-import read_ExpMonthly as NUDG
-import read_ShortCoupled as COUP
-import read_SIT as THICK
-import read_SIC as CONC
+import read_ShortCoupled_Type as COUP
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/'
+directoryfigure = '/home/zlabe/Desktop/AA/ENS100/ShortCoupled/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -33,17 +26,14 @@ currentdy = str(now.day)
 currentyr = str(now.year)
 currenttime = currentmn + '_' + currentdy + '_' + currentyr
 titletime = currentmn + '/' + currentdy + '/' + currentyr
-print('\n' '----Plotting Composites of Nudging-PAMIP - %s----' % titletime)
+print('\n' '----Plotting Composites of Short Coupled 100ens - %s----' % titletime)
 
 ### Add parameters
-su = [0,1,2,3,4,5]
-period = 'FM' 
+period = 'DJF' 
 level = 'surface'
 varnames = ['SLP','Z500','U700','U200','U10',
-            'Z50','T2M','T700','T500','THICK']
-varnames = ['V925']
-runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
-            r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
+            'Z50','T2M','T700','T500','THICK','V925']
+runnames = [r'A',r'B',r'C']
 
 ### Function to read in data
 def readData(simu,period,vari,level):
@@ -61,27 +51,9 @@ def readData(simu,period,vari,level):
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
-    if simu == 'AA-2030':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
-    elif simu == 'AA-2060':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
-    elif simu == 'AA-2090':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
-    ############################################################################### 
-    elif simu == 'coupled':
-        lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
-        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)        
-    ###############################################################################        
-    elif simu == 'SIT':
-        lat,lon,lev,future = THICK.readSIT(varia,'SIT_Fu',level)
-        lat,lon,lev,historical = THICK.readSIT(varia,'SIT_Pd',level)
-    ############################################################################### 
-    elif simu == 'SIC':
-        lat,lon,lev,future = CONC.readSIC(varia,'Fu',level)
-        lat,lon,lev,historical = CONC.readSIC(varia,'Pd',level)
+    lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level,simu)
+    lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level,simu)        
+
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
@@ -195,18 +167,15 @@ def readData(simu,period,vari,level):
 ############################################################################### 
 ### Call functions
 for rr in range(len(varnames)):
-    lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,varnames[rr],level)
-    lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,varnames[rr],level)
-    lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,varnames[rr],level)
-    lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,varnames[rr],level)
-    lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,varnames[rr],level)
-    lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,varnames[rr],level)
+    lat,lon,lev,anomA,nensA,prunsA,climoA = readData('a',period,varnames[rr],level)
+    lat,lon,lev,anomB,nensB,prunsB,climoB = readData('b',period,varnames[rr],level)
+    lat,lon,lev,anomC,nensC,prunsC,climoC = readData('c',period,varnames[rr],level)
     
     ### Chunk data
-    dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
-    nensall = [nensAA30,nensAA60,nensAA90,nensCOUP,nensTHIC,nensCONC]
-    pall =    [prunsAA30,prunsAA60,prunsAA90,prunsCOUP,prunsTHIC,prunsCONC]
-    climoall =[climoAA30,climoAA60,climoAA90,climoCOUP,climoTHIC,climoCONC]
+    dataall = [anomA,anomB,anomC]
+    nensall = [nensA,nensB,nensC]
+    pall =    [prunsA,prunsB,prunsC]
+    climoall =[climoA,climoB,climoC]
          
     ###########################################################################
     ###########################################################################
@@ -291,13 +260,13 @@ for rr in range(len(varnames)):
         barlim = np.arange(-100,101,50)
         cmap = cmocean.cm.balance
         label = r'\textbf{W m$^{-2}$}'       
-    fig = plt.figure()
+    fig = plt.figure(figsize=(9,5))
     for i in range(len(runnames)):
         var = dataall[i]    
         pvar = pall[i]
         clim = climoall[i]
     
-        ax1 = plt.subplot(2,3,su[i]+1)
+        ax1 = plt.subplot(1,3,i+1)
         
         if varnames[rr] == 'SST':
             m = Basemap(projection='moll',lon_0=0,resolution='l')   
@@ -329,7 +298,7 @@ for rr in range(len(varnames)):
             m.fillcontinents(color='dimgray')
                 
         cs.set_cmap(cmap) 
-        ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(0,0),xytext=(0.865,0.91),
+        ax1.annotate(r'\textbf{[2.3-2.1] -- %s}' % runnames[i],xy=(0,0),xytext=(0.865,0.91),
                      textcoords='axes fraction',color='k',fontsize=11,
                      rotation=320,ha='center',va='center')
         ax1.annotate(r'\textbf{[%s]}' % nensall[i],xy=(0,0),xytext=(0.085,0.91),
@@ -337,7 +306,7 @@ for rr in range(len(varnames)):
                      rotation=0,ha='center',va='center')
     
     ###########################################################################
-    cbar_ax = fig.add_axes([0.293,0.1,0.4,0.03])             
+    cbar_ax = fig.add_axes([0.293,0.2,0.4,0.03])             
     cbar = fig.colorbar(cs,cax=cbar_ax,orientation='horizontal',
                         extend='max',extendfrac=0.07,drawedges=False)
     
@@ -351,5 +320,5 @@ for rr in range(len(varnames)):
     plt.tight_layout()
     plt.subplots_adjust(bottom=0.16,wspace=0,hspace=0.01)
     
-    plt.savefig(directoryfigure + 'Composites_NUDGE-PAMIP_%s_%s.png' % (period,varnames[rr]),
+    plt.savefig(directoryfigure + 'ShortCoupled_100_%s_%s.png' % (period,varnames[rr]),
                 dpi=300)
