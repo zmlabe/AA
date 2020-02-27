@@ -29,7 +29,7 @@ titletime = currentmn + '/' + currentdy + '/' + currentyr
 print('\n' '----Plotting Composites of Short Coupled 100ens - %s----' % titletime)
 
 ### Add parameters
-period = 'DJF' 
+period = 'FM' 
 level = 'surface'
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK','V925']
@@ -226,7 +226,7 @@ for rr in range(len(varnames)):
         cmap = cmocean.cm.balance
         label = r'\textbf{m/s}'
     elif varnames[rr] == 'V925':
-        limit = np.arange(-1,1.1,0.05)
+        limit = np.arange(-1,1.001,0.05)
         barlim = np.arange(-1,2,1)
         cmap = cmocean.cm.balance
         label = r'\textbf{m/s}'

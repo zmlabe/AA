@@ -24,7 +24,7 @@ import read_SIT as THICK
 import read_SIC as CONC
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/'
+directoryfigure = '/home/zlabe/Desktop/AA/Seasons/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -37,16 +37,20 @@ print('\n' '----Plotting Composites of Nudging-PAMIP - %s----' % titletime)
 
 ### Add parameters
 su = [0,1,2,3,4,5]
-period = 'FM' 
+period = 'DJF'
+cps = 'yes' 
 level = 'surface'
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK']
-varnames = ['V925']
-runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
+if cps == 'none':
+    runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
+                r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
+elif cps == 'yes':
+    runnames = [r'AA-2030',r'AA-2060',r'AA-2090-cps',
             r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
 
 ### Function to read in data
-def readData(simu,period,vari,level):
+def readData(simu,period,vari,level,cps):
     if any([vari=='T700',vari=='T500']):
         varia = 'TEMP'
         level = 'profile'
@@ -62,14 +66,14 @@ def readData(simu,period,vari,level):
     ############################################################################### 
     ############################################################################### 
     if simu == 'AA-2030':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2060':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2090':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,cps)
+        lat,lon,lev,historical = CONT.readControl(varia,level,cps)
     ############################################################################### 
     elif simu == 'coupled':
         lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
@@ -195,12 +199,12 @@ def readData(simu,period,vari,level):
 ############################################################################### 
 ### Call functions
 for rr in range(len(varnames)):
-    lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,varnames[rr],level)
-    lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,varnames[rr],level)
-    lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,varnames[rr],level)
-    lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,varnames[rr],level)
-    lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,varnames[rr],level)
-    lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,varnames[rr],level)
+    lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,varnames[rr],level,cps)
+    lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,varnames[rr],level,cps)
+    lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,varnames[rr],level,cps)
+    lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,varnames[rr],level,cps)
+    lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,varnames[rr],level,cps)
+    lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,varnames[rr],level,cps)
     
     ### Chunk data
     dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
@@ -351,5 +355,9 @@ for rr in range(len(varnames)):
     plt.tight_layout()
     plt.subplots_adjust(bottom=0.16,wspace=0,hspace=0.01)
     
-    plt.savefig(directoryfigure + 'Composites_NUDGE-PAMIP_%s_%s.png' % (period,varnames[rr]),
-                dpi=300)
+    if cps == 'none':
+        plt.savefig(directoryfigure + 'Composites_NUDGE-PAMIP_%s_%s.png' % (period,varnames[rr]),
+                    dpi=300)
+    elif cps == 'yes':        
+        plt.savefig(directoryfigure + 'CPS/Composites_NUDGE-PAMIP_%s_%s.png' % (period,varnames[rr]),
+                    dpi=300)

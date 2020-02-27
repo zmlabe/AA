@@ -1,10 +1,9 @@
 """
-Script plots zonal wind in all model experiments
-
+Script plots seasonal cycle of net surface heat flux anomalies
 Notes
 -----
     Author : Zachary Labe
-    Date   : 24 February 2020
+    Date   : 26 February 2020
 """
 
 ### Import modules
@@ -30,40 +29,43 @@ currentdy = str(now.day)
 currentyr = str(now.year)
 currenttime = currentmn + '_' + currentdy + '_' + currentyr
 titletime = currentmn + '/' + currentdy + '/' + currentyr
-print('\n' '----Plotting Vertical Zonal Wind- %s----' % titletime)
+print('\n' '----Plotting Seasonal Cycle of Net Heat Flux %s----' % titletime)
 
 ### Add parameters
+datareader = True
 latpolar = 65.
-cps = 'yes'
-variable = 'U'
-period = 'DJF' 
-level = 'profile'
-if cps == 'none':
-    runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
-                r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
-elif cps == 'yes':
-    runnames = [r'AA-2030',r'AA-2060',r'AA-2090-cps',
+variable = 'RNET'
+period = 'timemonth' 
+level = 'surface'
+runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
             r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
 runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC']
+monthstext = [r'OCT',r'NOV',r'DEC',r'JAN',r'FEB',r'MAR']
 
 ### Function to read in data
-def readData(simu,period,varia,level,cps):
+def readData(simu,period,vari,level,latpolar):
+    if any([vari=='T700',vari=='T500']):
+        varia = 'TEMP'
+        level = 'profile'
+    else:
+        varia = vari
+    
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
     if simu == 'AA-2030':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level,'none')
-        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level)
+        lat,lon,lev,historical = CONT.readControl(varia,level)
     elif simu == 'AA-2060':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level,'none')
-        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level)
+        lat,lon,lev,historical = CONT.readControl(varia,level)
     elif simu == 'AA-2090':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,cps)
-        lat,lon,lev,historical = CONT.readControl(varia,level,cps)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level)
+        lat,lon,lev,historical = CONT.readControl(varia,level)
     ############################################################################### 
     elif simu == 'coupled':
         lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
-        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)        
+        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)     
     ###############################################################################        
     elif simu == 'SIT':
         lat,lon,lev,future = THICK.readSIT(varia,'SIT_Fu',level)
@@ -77,6 +79,16 @@ def readData(simu,period,varia,level,cps):
     ############################################################################### 
     ### Calculate number of ensembles
     nens = np.shape(historical)[0]
+    
+    ### Check for 4D field
+    if vari == 'T700':
+        levq = np.where(lev == 700)[0]
+        future = future[:,:,levq,:,:].squeeze()
+        historical = historical[:,:,levq,:,:].squeeze()
+    elif vari == 'T500':
+        levq = np.where(lev == 500)[0]
+        future = future[:,:,levq,:,:].squeeze()
+        historical = historical[:,:,levq,:,:].squeeze()
 
     ### Check for missing data [ensembles,months,lat,lon]
     future[np.where(future <= -1e10)] = np.nan
@@ -90,10 +102,6 @@ def readData(simu,period,varia,level,cps):
         print('Calculating over %s months!' % period)
         futurem = np.nanmean(future[:,-3:],axis=1)
         historicalm = np.nanmean(historical[:,-3:],axis=1)
-    elif period == 'ND':
-        print('Calculating over %s months!' % period)
-        futurem = np.nanmean(future[:,-2:],axis=1)
-        historicalm = np.nanmean(historical[:,-2:],axis=1)
     elif period == 'D':
         print('Calculating over %s months!' % period)
         futurem = np.nanmean(future[:,-1:],axis=1)
@@ -138,12 +146,27 @@ def readData(simu,period,varia,level,cps):
         print('Calculating over %s months!' % period)
         futurem = np.nanmean(future[:,2:4],axis=1)
         historicalm = np.nanmean(historical[:,2:4],axis=1)
+    elif period == 'annual':
+        print('Calculating over %s months!' % period)
+        futurem = np.nanmean(future,axis=1)
+        historicalm = np.nanmean(historical,axis=1)
+    elif period == 'NONE':
+        print('Calculating over %s months!' % period)
+        futurem = future
+        historicalm = historical
+    elif period == 'timemonth':
+        print('Calculating over O,N,D,J,F,M months!')
+        futurem = np.append(future[:,-3:,:,:],future[:,:3,:,:],axis=1)
+        historicalm = np.append(historical[:,-3:,:,:],historical[:,:3,:,:],axis=1)
     else:
         print(ValueError('Selected wrong month period!'))
 
     ###########################################################################
     ###########################################################################
     ###########################################################################
+    ### Calculate polar cap
+    lon2,lat2 = np.meshgrid(lon,lat)
+    
     ### Calculate zonal means
     futuremz = np.nanmean(futurem,axis=3)
     historicalmz = np.nanmean(historicalm,axis=3)
@@ -163,12 +186,12 @@ def readData(simu,period,varia,level,cps):
     return lat,lon,lev,anommean,nens,pruns,climo
 
 ### Call data
-#lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,cps)
-#lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,cps)
-#lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,cps)
-#lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level,cps)
-#lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level,cps)
-#lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level,cps)
+#lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,latpolar)
+#lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,latpolar)
+#lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,latpolar)
+#lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level,latpolar)
+#lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level,latpolar)
+#lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level,latpolar)
 #
 #### Chunk data
 #dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
@@ -200,20 +223,15 @@ def adjust_spines(ax, spines):
         ax.xaxis.set_ticks([]) 
         
 ### Set limits for contours and colorbars
-if variable == 'TEMP':
-    limit = np.arange(-3,3.01,0.25)
-    barlim = np.arange(-3,4,1)
+if variable == 'RNET':
+    limit = np.arange(-40,41,1)
+#    limitc = np.arange(-45,46,5)
+    barlim = np.arange(-40,41,20)
     cmap = cmocean.cm.balance
-    label = r'\textbf{$^{\circ}$C}'
-    zscale = np.array([1000,925,850,700,500,300,200])
-    latq,levq = np.meshgrid(lat,lev)
-elif variable == 'U':
-    limit = np.arange(-2,2.01,0.1)
-    barlim = np.arange(-2,3,1)
-    cmap = cmocean.cm.balance
-    label = r'\textbf{m/s}'
-    zscale = np.array([1000,700,500,300,200,100,50,30,10])
-    latq,levq = np.meshgrid(lat,lev)
+    label = r'\textbf{%s [\textbf{W/m$^{2}$}]}' % variable
+    zscale = np.arange(-90,91,15)
+    time = np.arange(0,6,1)
+    latq,timeq = np.meshgrid(lat,time)
         
 fig = plt.figure()
 for i in range(len(runnames)):
@@ -227,6 +245,9 @@ for i in range(len(runnames)):
     pvar[np.isnan(pvar)] = 0.
     var = varnomask * pvar
     var[var == 0.] = np.nan
+    
+    if i > 2:
+        var = var * -1 # change sign for upward flux
     
     ### Create plot
     ax1 = plt.subplot(2,3,i+1)
@@ -243,7 +264,7 @@ for i in range(len(runnames)):
                     width=2,color='dimgrey')
         plt.gca().axes.get_yaxis().set_visible(True)
         plt.gca().axes.get_xaxis().set_visible(False)
-        plt.ylabel(r'\textbf{Pressure [hPa]}',color='k',fontsize=7)
+        plt.ylabel(r'\textbf{Latitude [$\bf{^{\circ}}$]}',color='k',fontsize=7)
     elif i == 3:
         ax1.tick_params(axis='x',direction='out',which='major',pad=3,
                     width=2,color='dimgrey')   
@@ -251,7 +272,7 @@ for i in range(len(runnames)):
                     width=2,color='dimgrey')
         plt.gca().axes.get_xaxis().set_visible(True)
         plt.gca().axes.get_yaxis().set_visible(True)
-        plt.ylabel(r'\textbf{Pressure [hPa]}',color='k',fontsize=7)
+        plt.ylabel(r'\textbf{Latitude [$\bf{^{\circ}}$]}',color='k',fontsize=7)
     elif i == 4 or i == 5:
         ax1.tick_params(axis='x',direction='out',which='major',pad=3,
                     width=2,color='dimgrey')   
@@ -267,33 +288,22 @@ for i in range(len(runnames)):
     ax1.yaxis.set_ticks_position('left')
     
     ### Plot contours
-    cs = plt.contourf(latq,levq,var,limit,extend='both')
-    cs1 = plt.contourf(latq,levq,varnomask,limit,extend='both',
-                       alpha=0.5,antialiased=True)
-    cs2 = plt.contour(latq,levq,clim,np.arange(-90,95,5),
-                      linewidths=0.3,colors='k',extend='both')
-#    cs2 = plt.contourf(latq,levq,pvar,colors='None',
-#                   hatches=['//////'],linewidths=0.4)
+    cs = plt.contourf(timeq,latq,var,limit,extend='both')
+#    cs1 = plt.contour(timeq,latq,clim,limitc,colors='dimgrey',
+#                      linewidths=0.3)
     cs.set_cmap(cmap)
-    cs1.set_cmap(cmap)
     
-    plt.gca().invert_yaxis()
-    plt.yscale('log',nonposy='clip')
-    
-    plt.xticks(np.arange(-90,91,15),map(str,np.arange(-90,91,15)),fontsize=6)
+    plt.xticks(np.arange(0,6,1),monthstext,fontsize=4)
     plt.yticks(zscale,map(str,zscale),ha='right',fontsize=6)
     
-    plt.xlim([0,90])
-    if variable == 'TEMP' or variable == 'GEOP':
-        plt.ylim([1000,200])
-    else:
-        plt.ylim([1000,10])
+    plt.xlim([0,5])
+    plt.ylim([0,90])
     plt.minorticks_off()
            
-    ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(80,200),xytext=(0.98,0.93),
+    ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(0,90),xytext=(0.98,0.93),
          textcoords='axes fraction',color='k',fontsize=8,
          rotation=0,ha='right',va='center')
-    ax1.annotate(r'\textbf{[%s]}' % en,xy=(80,200),xytext=(0.02,0.93),
+    ax1.annotate(r'\textbf{[%s]}' % en,xy=(0,90),xytext=(0.02,0.93),
          textcoords='axes fraction',color='dimgrey',fontsize=8,
          rotation=0,ha='left',va='center')
 
@@ -311,10 +321,5 @@ cbar.ax.tick_params(axis='x', size=.001,labelsize=7)
 cbar.outline.set_edgecolor('dimgrey')
     
 plt.subplots_adjust(bottom=0.17,hspace=0.08,wspace=0.08)    
-if cps == 'none':
-    plt.savefig(directoryfigure + 'VerticalModels_U_%s.png' % period,
-            dpi=300)
-elif cps == 'yes':
-    plt.savefig(directoryfigure + 'VerticalModels_U_%s_CPS.png' % period,
-                dpi=300)
+plt.savefig(directoryfigure + 'MonthlyModels_%s_Oct-Apr.png' % variable,dpi=300)
 print('Completed: Script done!')

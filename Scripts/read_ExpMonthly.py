@@ -8,10 +8,10 @@ Notes
     
 Usage
 -----
-    [1] readExperi(varid,exp,timeperiod,level)
+    [1] readExperi(varid,exp,timeperiod,level,cps)
 """
 
-def readExperi(varid,exp,timeperiod,level):
+def readExperi(varid,exp,timeperiod,level,cps):
     """
     Function reads monthly data for AA/UTW experiments
 
@@ -25,6 +25,8 @@ def readExperi(varid,exp,timeperiod,level):
         Name of experiment to compare for nudging
     timeperiod : string
         Name of decadal nudging
+    cps : string
+        none or yes for stratosphere
 
     Returns
     -------
@@ -37,7 +39,7 @@ def readExperi(varid,exp,timeperiod,level):
 
     Usage
     -----
-    lat,lon,lev,var = readExperi(varid,exp,timperiod,level)
+    lat,lon,lev,var = readExperi(varid,exp,timperiod,level,cps)
     """
     print('\n>>>>>>>>>> Using readExperi function!')
     
@@ -49,8 +51,12 @@ def readExperi(varid,exp,timeperiod,level):
     ###########################################################################
     ###########################################################################
     ### Call files for directory (1-51 members)
-    directorydata = '/seley/ypeings/simu/'
-    experi = exp + '-' + timeperiod
+    if cps == 'none':
+        directorydata = '/seley/ypeings/simu/'
+        experi = exp + '-' + timeperiod
+    elif cps == 'yes':
+        directorydata = '/seley/ypeings/simu/'
+        experi = exp + '-' + timeperiod + '-cps'
     
     totaldirectory = directorydata + experi + '/monthly/'
     filename = totaldirectory + varid + '_1950-2000.nc'
@@ -114,4 +120,4 @@ def readExperi(varid,exp,timeperiod,level):
 ###############################################################################
 ###############################################################################
 ### Test functions - do not use!
-#lat,lon,lev,var = readExperi('U','UTW','2030','zonmean')
+#lat,lon,lev,var = readExperi('U10','UTW','2090','surface','yes')

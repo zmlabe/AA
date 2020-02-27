@@ -34,7 +34,7 @@ print('\n' '----Plotting Scatter of Warming-High - %s----' % titletime)
 ### Add parameters
 datareader = True
 latpolar = 65.
-variable = 'THICK'
+variable = 'T700'
 period = 'DJF' 
 level = 'surface'
 runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
@@ -81,7 +81,7 @@ for i in range(len(runnames)):
 ###############################################################################
 ###############################################################################
 ###############################################################################
-### Calculate reanalysis epochs
+### Calculate reanalysis epochs for temperature
 epochq = 10
 oldthicke = np.nanmean(vare[:epochq])  # 1979-1988
 newthicke = np.nanmean(vare[-epochq:]) # 2008-2017
@@ -90,6 +90,15 @@ diffe = newthicke - oldthicke
 oldthickr = np.nanmean(varr[:epochq])  # 1979-1988
 newthickr = np.nanmean(varr[-epochq:]) # 2008-2017
 diffr = newthickr - oldthickr
+
+### Calculate reanalysis epochs for Siberian High
+oldshe = np.nanmean(she[:epochq])  # 1979-1988
+newshe = np.nanmean(she[-epochq:]) # 2008-2017
+diffshe = newshe - oldshe
+
+oldshr = np.nanmean(shr[:epochq])  # 1979-1988
+newshr = np.nanmean(shr[-epochq:]) # 2008-2017
+diffshr = newshr - oldshr
 
 ### Calculate T2M station-based data sets
 if variable == 'T2M':
@@ -148,6 +157,7 @@ ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
 
 if variable == 'THICK':
     plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False)
+    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
     color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
@@ -176,6 +186,7 @@ if variable == 'THICK':
     
 elif variable == 'T700':
     plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False)
+    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
     color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
@@ -205,6 +216,7 @@ elif variable == 'T700':
  
 elif variable == 'T500':
     plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False)
+    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
     color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
@@ -236,6 +248,7 @@ elif variable == 'T2M':
     plt.axvspan(diffobs.min(),diffobs.max(),alpha=0.6,color='darkgrey',
                 clip_on=False,linewidth=0)
     plt.axvspan(diffe,diffr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k')
     
     color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))

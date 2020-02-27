@@ -35,26 +35,31 @@ print('\n' '----Plotting Vertical Warming- %s----' % titletime)
 ### Add parameters
 datareader = True
 latpolar = 65.
+cps = 'yes'
 variable = 'TEMP'
-period = 'FM' 
+period = 'OND' 
 level = 'profile'
-runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
+if cps == 'none':
+    runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
+                r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
+elif cps == 'yes':
+    runnames = [r'AA-2030',r'AA-2060',r'AA-2090-cps',
             r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
 runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC']
 
 ### Function to read in data
-def readData(simu,period,varia,level):
+def readData(simu,period,varia,level,cps):
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
     if simu == 'AA-2030':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level,'none')
         lat,lon,lev,historical = CONT.readControl(varia,level)
     elif simu == 'AA-2060':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level,'none')
         lat,lon,lev,historical = CONT.readControl(varia,level)
     elif simu == 'AA-2090':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,cps)
         lat,lon,lev,historical = CONT.readControl(varia,level)
     ############################################################################### 
     elif simu == 'coupled':
@@ -155,12 +160,12 @@ def readData(simu,period,varia,level):
     return lat,lon,lev,anommean,nens,pruns,climo
 
 ### Call data
-lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level)
-lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level)
-lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level)
-lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level)
-lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level)
-lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level)
+lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,cps)
+lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,cps)
+lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,cps)
+lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level,cps)
+lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level,cps)
+lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level,cps)
 
 ### Chunk data
 dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
@@ -304,7 +309,11 @@ cbar.set_ticklabels(list(map(str,barlim)))
 cbar.ax.tick_params(axis='x', size=.001,labelsize=7)
 cbar.outline.set_edgecolor('dimgrey')
     
-plt.subplots_adjust(bottom=0.17,hspace=0.08,wspace=0.08)    
-plt.savefig(directoryfigure + 'VerticalModels_TEMP_%s.png' % period,
+plt.subplots_adjust(bottom=0.17,hspace=0.08,wspace=0.08)  
+if cps == 'none':
+    plt.savefig(directoryfigure + 'VerticalModels_TEMP_%s.png' % period,
             dpi=300)
+elif cps == 'yes':
+    plt.savefig(directoryfigure + 'VerticalModels_TEMP_%s_CPS.png' % period,
+                dpi=300)
 print('Completed: Script done!')

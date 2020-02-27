@@ -1,4 +1,4 @@
-def UBI(simu,period):
+def UBI(simu,period,varia):
     """
     Script calculates the Ural Blocking Index (SLP)
     """
@@ -12,7 +12,6 @@ def UBI(simu,period):
     import read_SIC as CONC
     
     ### Select variable
-    varia = 'SLP'
     level = 'surface'
     
     ############################################################################### 
@@ -125,4 +124,4 @@ def UBI(simu,period):
     return ubi
 
 ### Test functions (do not use!)
-#ubi = UBI('AA-2090','DJF')
+#ubi = UBI('AA-2090','DJF','Z500')

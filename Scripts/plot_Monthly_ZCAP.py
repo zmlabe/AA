@@ -20,7 +20,7 @@ import read_SIT as THICK
 import read_SIC as CONC
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/Reanalysis/'
+directoryfigure = '/home/zlabe/Desktop/AA/Vertical_Model/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -34,28 +34,33 @@ print('\n' '----Plotting Polar Cap Heights %s----' % titletime)
 ### Add parameters
 datareader = True
 latpolar = 65.
+cps = 'yes'
 variable = 'GEOP'
 period = 'timemonth' 
 level = 'profile'
-runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
+if cps == 'none':
+    runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
+                r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
+elif cps == 'yes':
+    runnames = [r'AA-2030',r'AA-2060',r'AA-2090-cps',
             r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
 runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC']
 monthstext = [r'OCT',r'NOV',r'DEC',r'JAN',r'FEB',r'MAR']
 
 ### Function to read in data
-def readData(simu,period,varia,level,latpolar):
+def readData(simu,period,varia,level,latpolar,cps):
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
     if simu == 'AA-2030':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2060':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2090':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,cps)
+        lat,lon,lev,historical = CONT.readControl(varia,level,cps)
     ############################################################################### 
     elif simu == 'coupled':
         lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
@@ -176,12 +181,12 @@ def readData(simu,period,varia,level,latpolar):
     return lat,lon,lev,anommean,nens,pruns,climo
 
 ### Call data
-lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,latpolar)
-lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,latpolar)
-lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,latpolar)
-lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level,latpolar)
-lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level,latpolar)
-lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level,latpolar)
+lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,latpolar,cps)
+lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,latpolar,cps)
+lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,latpolar,cps)
+lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level,latpolar,cps)
+lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level,latpolar,cps)
+lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level,latpolar,cps)
 
 ### Chunk data
 dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
@@ -319,5 +324,8 @@ cbar.ax.tick_params(axis='x', size=.001,labelsize=7)
 cbar.outline.set_edgecolor('dimgrey')
     
 plt.subplots_adjust(bottom=0.17,hspace=0.08,wspace=0.08)    
-plt.savefig(directoryfigure + 'VerticalModels_ZCAP_Oct-Apr.png',dpi=300)
+if cps == 'none':
+    plt.savefig(directoryfigure + 'VerticalModels_ZCAP_Oct-Apr.png',dpi=300)
+elif cps == 'yes':
+    plt.savefig(directoryfigure + 'VerticalModels_ZCAP_Oct-Apr_CPS.png',dpi=300)
 print('Completed: Script done!')

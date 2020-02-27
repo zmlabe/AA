@@ -8,10 +8,10 @@ Notes
     
 Usage
 -----
-    [1] readControl(varid,level)
+    [1] readControl(varid,level,cps)
 """
 
-def readControl(varid,level):
+def readControl(varid,level,cps):
     """
     Function reads monthly data from CTNLQ control for AA/UTW experiments
 
@@ -21,6 +21,8 @@ def readControl(varid,level):
         variable name to read
     level : string
         Height of variable (surface or profile)
+    cps : string
+        stratosphere - none or yes
         
 
     Returns
@@ -34,7 +36,7 @@ def readControl(varid,level):
 
     Usage
     -----
-    lat,lon,lev,var = readControl(varid,level)
+    lat,lon,lev,var = readControl(varid,level,cps)
     """
     print('\n>>>>>>>>>> Using readControl function!')
     
@@ -47,10 +49,15 @@ def readControl(varid,level):
     ###########################################################################
     ### Call files for directory (1-51 members)
     directorydata = '/seley/ypeings/simu/'
-    experi = 'CTLNQ'
     
-    totaldirectory = directorydata + experi + '/monthly/'
-    filename = totaldirectory + varid + '_1900-2000.nc'
+    if cps == 'none':
+        experi = 'CTLNQ'
+        totaldirectory = directorydata + experi + '/monthly/'
+        filename = totaldirectory + varid + '_1900-2000.nc'
+    elif cps == 'yes':
+        experi = 'CTLNUD-cps'
+        totaldirectory = directorydata + experi + '/monthly/'
+        filename = totaldirectory + varid + '_1950-2000.nc'
 
     ### Read in Data
     if level == 'surface': # 3d variables
@@ -111,4 +118,4 @@ def readControl(varid,level):
 ###############################################################################
 ###############################################################################
 ### Test functions - do not use!
-#lat,lon,lev,var = readControl('U','zonmean')
+#lat,lon,lev,var = readControl('U10','surface','yes')

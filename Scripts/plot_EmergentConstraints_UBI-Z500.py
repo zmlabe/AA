@@ -1,10 +1,10 @@
 """
-Script plots relationship between vertical warming and the Ural High
+Script plots relationship between vertical warming and the Ural Blocking
 
 Notes
 -----
     Author : Zachary Labe
-    Date   : 20 February 2020
+    Date   : 26 February 2020
 """
 
 ### Import modules
@@ -20,7 +20,7 @@ import read_OBS as REAN
 import read_StationOBS as SOBS
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/Emergent/UBI/'
+directoryfigure = '/home/zlabe/Desktop/AA/Emergent/UBI/Z500/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -29,13 +29,13 @@ currentdy = str(now.day)
 currentyr = str(now.year)
 currenttime = currentmn + '_' + currentdy + '_' + currentyr
 titletime = currentmn + '/' + currentdy + '/' + currentyr
-print('\n' '----Plotting Scatter of Warming-Ural High - %s----' % titletime)
+print('\n' '----Plotting Scatter of Warming-Ural Blocking - %s----' % titletime)
 
 ### Add parameters
 datareader = True
 latpolar = 65.
 variable = 'T700'
-variable2 = 'SLP'
+variable2 = 'Z500'
 period = 'DJF' 
 level = 'surface'
 runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
@@ -60,12 +60,12 @@ if datareader == True:
     ### Read in reanalysis data
     years = np.arange(1979,2017+1,1)
     late,lone,leve,thicke = REAN.readOBS('ERAI_Present',variable,level,period)
-    late,lone,leve,slpe = REAN.readOBS('ERAI_Present',variable2,level,period)
+    late,lone,leve,slpe = REAN.readOBS('ERAI_Present','Z500',level,period)
     she = REAN.calcOBS_UBI(slpe,late,lone)
     vare= REAN.calcOBS_PolarCap(thicke,late,lone,latpolar)
     
     latr,lonr,levr,thickr = REAN.readOBS('NCEP1',variable,level,period)
-    latr,lonr,levr,slpr = REAN.readOBS('NCEP1',variable2,level,period)
+    latr,lonr,levr,slpr = REAN.readOBS('NCEP1','Z500',level,period)
     shr = REAN.calcOBS_UBI(slpr,latr,lonr)
     varr= REAN.calcOBS_PolarCap(thickr,latr,lonr,latpolar)
  
@@ -171,15 +171,15 @@ if variable == 'THICK':
                      handlelength=0,handletextpad=1)
     
     plt.xticks(np.arange(0,100,10),map(str,np.arange(0,100,10)),size=8)
-    plt.yticks(np.arange(-5,10,0.5),map(str,np.arange(-5,10,0.5)),size=8)
+    plt.yticks(np.arange(-5,105,5),map(str,np.arange(-5,105,5)),size=8)
     plt.xlim([0,90])
-    plt.ylim([-1,3])
+    plt.ylim([0,45])
     
     plt.xlabel(r'\textbf{$\bf{\Delta}$1000-500 Thickness [m]}',
                          color='k',size=11,labelpad=5)
-    plt.ylabel(r'\textbf{$\bf{\Delta}$Ural Blocking Index [hPa]}',
+    plt.ylabel(r'\textbf{$\bf{\Delta}$Ural Blocking Ridge [m]}',
                          color='k',size=11,labelpad=5)
-    plt.text(0,2.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
+    plt.text(0,43.8,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k',ha='left')
     
     plt.savefig(directoryfigure + 'UBI_EmergentConstraints_PAMIP-Nudge_%s.png' % variable,
@@ -200,16 +200,16 @@ elif variable == 'T700':
                      handlelength=0,handletextpad=1)
     
     plt.xticks(np.arange(0,7.01,0.5),map(str,np.arange(0,7.01,0.5)),size=8)
-    plt.yticks(np.arange(-5,10,0.5),map(str,np.arange(-5,10,0.5)),size=8)
+    plt.yticks(np.arange(-5,105,5),map(str,np.arange(-5,105,5)),size=8)
     plt.xlim([0,4])
-    plt.ylim([-1,3])
+    plt.ylim([0,45])
     
     plt.xlabel(r'\textbf{$\bf{\Delta}$T700 [$\bf{^{\circ}}$C]}',
                          color='k',size=11,labelpad=5)
-    plt.ylabel(r'\textbf{$\bf{\Delta}$Ural Blocking Index [hPa]}',
+    plt.ylabel(r'\textbf{$\bf{\Delta}$Ural Blocking Ridge [m]}',
                          color='k',size=11,labelpad=5)
     
-    plt.text(0,2.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
+    plt.text(0,43.8,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
     plt.savefig(directoryfigure + 'UBI_EmergentConstraints_PAMIP-Nudge_%s.png' % variable,
@@ -230,16 +230,16 @@ elif variable == 'T500':
                      handlelength=0,handletextpad=1)
     
     plt.xticks(np.arange(0,2.01,0.25),map(str,np.arange(0,2.01,0.25)),size=8)
-    plt.yticks(np.arange(-5,10,0.5),map(str,np.arange(-5,10,0.5)),size=8)
+    plt.yticks(np.arange(-5,105,5),map(str,np.arange(-5,105,5)),size=8)
     plt.xlim([0,2])
-    plt.ylim([-1,3])
+    plt.ylim([0,45])
     
     plt.xlabel(r'\textbf{$\bf{\Delta}$T500 [$\bf{^{\circ}}$C]}',
                          color='k',size=11,labelpad=5)
-    plt.ylabel(r'\textbf{$\bf{\Delta}$Ural Blocking Index [hPa]}',
+    plt.ylabel(r'\textbf{$\bf{\Delta}$Ural Blocking Ridge [m]}',
                          color='k',size=11,labelpad=5)
     
-    plt.text(0,2.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
+    plt.text(0,43.8,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
     plt.savefig(directoryfigure + 'UBI_EmergentConstraints_PAMIP-Nudge_%s.png' % variable,
@@ -262,16 +262,16 @@ elif variable == 'T2M':
                      handlelength=0,handletextpad=1)
     
     plt.xticks(np.arange(0,16,2),map(str,np.arange(0,16,2)),size=8)
-    plt.yticks(np.arange(-10,10,0.5),map(str,np.arange(-10,10,0.5)),size=8)
+    plt.yticks(np.arange(-5,105,5),map(str,np.arange(-5,105,5)),size=8)
     plt.xlim([0,10])
-    plt.ylim([-1,3])
+    plt.ylim([0,45])
     
     plt.xlabel(r'\textbf{$\bf{\Delta}$T2M [$\bf{^{\circ}}$C]}',
                          color='k',size=11,labelpad=5)
-    plt.ylabel(r'\textbf{$\bf{\Delta}$Ural Blocking Index [hPa]}',
+    plt.ylabel(r'\textbf{$\bf{\Delta}$Ural Blocking Ridge [m]}',
                          color='k',size=11,labelpad=5)
     
-    plt.text(0,2.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
+    plt.text(0,43.8,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
     plt.savefig(directoryfigure + 'UBI_EmergentConstraints_PAMIP-Nudge_%s.png' % variable,
