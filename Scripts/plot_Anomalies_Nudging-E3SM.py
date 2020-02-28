@@ -1,11 +1,11 @@
 """
-Script plots anomalies for multiple SC-WACCM4 experiments from PAMIP and AA
+Script plots anomalies for multiple E3SM experiments from PAMIP and AA
 nudging from Peings et al. 2019, [GRL]
 
 Notes
 -----
     Author : Zachary Labe
-    Date   : 18 February 2020
+    Date   : 27 February 2020
 """
 
 ### Import modules
@@ -22,9 +22,12 @@ import read_ExpMonthly as NUDG
 import read_ShortCoupled as COUP
 import read_SIT as THICK
 import read_SIC as CONC
+import read_SIT_E3SM as E3SIT
+import read_SIC_E3SM as E3SIC
+import read_OldIceExperi as OLD
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/Seasons/'
+directoryfigure = '/home/zlabe/Desktop/AA/Seasons/E3SM/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -33,24 +36,19 @@ currentdy = str(now.day)
 currentyr = str(now.year)
 currenttime = currentmn + '_' + currentdy + '_' + currentyr
 titletime = currentmn + '/' + currentdy + '/' + currentyr
-print('\n' '----Plotting Composites of Nudging-PAMIP - %s----' % titletime)
+print('\n' '----Plotting Composites of Nudging-E3SM - %s----' % titletime)
 
 ### Add parameters
 su = [0,1,2,3,4,5]
-period = 'FM'
-cps = 'none' 
+period = 'DJF'
 level = 'surface'
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK','RNET']
-if cps == 'none':
-    runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
-                r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
-elif cps == 'yes':
-    runnames = [r'AA-2030',r'AA-2060',r'AA-2090-cps',
-            r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
+runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
+            r'E3SM-SIT-Pd',r'E3SM-Pd',r'E3SM-Pi']
 
 ### Function to read in data
-def readData(simu,period,vari,level,cps):
+def readData(simu,period,vari,level):
     if any([vari=='T700',vari=='T500']):
         varia = 'TEMP'
         level = 'profile'
@@ -72,8 +70,8 @@ def readData(simu,period,vari,level,cps):
         lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level,'none')
         lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2090':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,cps)
-        lat,lon,lev,historical = CONT.readControl(varia,level,cps)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     ############################################################################### 
     elif simu == 'coupled':
         lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
@@ -83,9 +81,28 @@ def readData(simu,period,vari,level,cps):
         lat,lon,lev,future = THICK.readSIT(varia,'SIT_Fu',level)
         lat,lon,lev,historical = THICK.readSIT(varia,'SIT_Pd',level)
     ############################################################################### 
-    elif simu == 'SIC':
+    elif simu == 'SIC_Pd':
         lat,lon,lev,future = CONC.readSIC(varia,'Fu',level)
         lat,lon,lev,historical = CONC.readSIC(varia,'Pd',level)
+    ############################################################################### 
+    elif simu == 'SIC_Pi':
+        lat,lon,lev,future = CONC.readSIC(varia,'Fu',level)
+        lat,lon,lev,historical = CONC.readSIC(varia,'Pi',level)
+    ############################################################################### 
+    elif simu == 'E3SIT':
+        lat,lon,lev,future = E3SIT.readE3SM_SIT(varia,'ESIT_Fu',level)
+        lat,lon,lev,historical = E3SIT.readE3SM_SIT(varia,'ESIT_Pd',level)
+    ############################################################################### 
+    elif simu == 'E3SIC_Pd':
+        lat,lon,lev,future = E3SIC.readE3SM_SIC(varia,'ESIC_Fu',level)
+        lat,lon,lev,historical = E3SIC.readE3SM_SIC(varia,'ESIC_Pd',level)
+    elif simu == 'E3SIC_Pi':
+        lat,lon,lev,future = E3SIC.readE3SM_SIC(varia,'ESIC_Fu',level)
+        lat,lon,lev,historical = E3SIC.readE3SM_SIC(varia,'ESIC_Pi',level)
+    ############################################################################### 
+    elif simu == 'OLD':
+        lat,lon,lev,future = OLD.readOldIceExperi(varia,'FICT',level)
+        lat,lon,lev,historical = OLD.readOldIceExperi(varia,'HIT',level)
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
@@ -199,12 +216,12 @@ def readData(simu,period,vari,level,cps):
 ############################################################################### 
 ### Call functions
 for rr in range(len(varnames)):
-    lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,varnames[rr],level,cps)
-    lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,varnames[rr],level,cps)
-    lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,varnames[rr],level,cps)
-    lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,varnames[rr],level,cps)
-    lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,varnames[rr],level,cps)
-    lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,varnames[rr],level,cps)
+    lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,varnames[rr],level)
+    lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,varnames[rr],level)
+    lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,varnames[rr],level)
+    lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('E3SIT',period,varnames[rr],level)
+    lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('E3SIC_Pd',period,varnames[rr],level)
+    lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('E3SIC_Pi',period,varnames[rr],level)
     
     ### Chunk data
     dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
@@ -339,7 +356,7 @@ for rr in range(len(varnames)):
                 
         cs.set_cmap(cmap) 
         ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(0,0),xytext=(0.865,0.91),
-                     textcoords='axes fraction',color='k',fontsize=11,
+                     textcoords='axes fraction',color='k',fontsize=8,
                      rotation=320,ha='center',va='center')
         ax1.annotate(r'\textbf{[%s]}' % nensall[i],xy=(0,0),xytext=(0.085,0.91),
                      textcoords='axes fraction',color='dimgrey',fontsize=8,
@@ -360,9 +377,5 @@ for rr in range(len(varnames)):
     plt.tight_layout()
     plt.subplots_adjust(bottom=0.16,wspace=0,hspace=0.01)
     
-    if cps == 'none':
-        plt.savefig(directoryfigure + 'Composites_NUDGE-PAMIP_%s_%s.png' % (period,varnames[rr]),
-                    dpi=300)
-    elif cps == 'yes':        
-        plt.savefig(directoryfigure + 'CPS/Composites_NUDGE-PAMIP_%s_%s.png' % (period,varnames[rr]),
-                    dpi=300)
+    plt.savefig(directoryfigure + 'Composites_NUDGE-E3SM_%s_%s.png' % (period,varnames[rr]),
+                dpi=300)

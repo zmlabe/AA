@@ -1,28 +1,28 @@
 """
-Script reads in monthly data from SC-WACCM4 SIC experiments from PAMIP
+Script reads in monthly data from E3SM SIT experiments from PAMIP
  
 Notes
 -----
     Author : Zachary Labe
-    Date   : 18 February 2020
+    Date   : 27 February 2020
     
 Usage
 -----
-    [1] readSIC(varid,timeperiod,level)
+    [1] readE3SM_SIT(varid,timeperiod,level)
 """
 
-def readSIC(varid,timeperiod,level):
+def readE3SM_SIT(varid,timeperiod,level):
     """
-    Function reads monthly data from SIC experiments from PAMIP
+    Function reads monthly data from SIT experiments from PAMIP (E3SM)
 
     Parameters
     ----------
     varid : string
         variable name to read
-    timeperiod : string
-        Fu or Pd or Pi
     level : string
         Height of variable (surface or profile)
+    timeperiod : string
+        ESIT_Fu or ESIT_Pd
 
     Returns
     -------
@@ -35,9 +35,9 @@ def readSIC(varid,timeperiod,level):
 
     Usage
     -----
-    lat,lon,lev,var = readSIC(varid,timperiod,level)
+    lat,lon,lev,var = readE3SM_SIT(varid,timperiod,level)
     """
-    print('\n>>>>>>>>>> Using readSIC function!')
+    print('\n>>>>>>>>>> Using readE3SM_SIT function!')
     
     ### Import modules
     import numpy as np
@@ -46,32 +46,21 @@ def readSIC(varid,timeperiod,level):
     ###########################################################################
     ###########################################################################
     ###########################################################################
-    ### Call files for directory (1-301 members)
-    if timeperiod == 'Fu':
-        experi = 'PAMIP-1.6-QBO-300yr'
+    ### Call files for directory (1-101 members)
+    if timeperiod == 'ESIT_Fu':
+        experi = 'PAMIP-1.10-E3SM'
         directorydata = '/seley/ypeings/simu/'
         totaldirectory = directorydata + experi + '/monthly/'
-        filename = totaldirectory + varid + '_1700-2000.nc'
-        print('-----------USING SC-WACCM4 CONCENTRATION EXPERIMENTS (Future)!-----------')
-    elif timeperiod == 'Pd':
-        experi = 'PAMIP-1.1-QBO-300yr'
+        filename = totaldirectory + varid + '_1900-2000.nc'
+        print('-----------USING DOE E3SM EXPERIMENTS!-----------')
+    elif timeperiod == 'ESIT_Pd':
+        experi = 'PAMIP-1.9-E3SM'
         directorydata = '/seley/ypeings/simu/'
         totaldirectory = directorydata + experi + '/monthly/'
-        filename = totaldirectory + varid + '_1700-2000.nc'
-        print('-----------USING SC-WACCM4 CONCENTRATION EXPERIMENTS (Present-Day)!-----------')
-    elif timeperiod == 'Pi':
-        experi = 'PAMIP-1.5-300yr'
-        directorydata = '/seley/ypeings/simu/'
-        totaldirectory = directorydata + experi + '/monthly/'
-        filename = totaldirectory + varid + '_1700-2000.nc'
-        print('-----------USING SC-WACCM4 CONCENTRATION EXPERIMENTS (Pre-industrial)!-----------')
-        
-    ### Missing variables in other seley directory
-    if any([varid=='THICK',varid=='RNET']):
-        directorydata = '/seley/zlabe/simu/' # this is different
-        totaldirectory = directorydata + experi + '/monthly/'
-        filename = totaldirectory + varid + '_1700-2000.nc'
-        print('***ZLABE DIRECTORY***')
+        filename = totaldirectory + varid + '_1900-2000.nc'
+        print('-----------USING DOE E3SM EXPERIMENTS!-----------')
+    else:
+        print(ValueError('Selected wrong time period (ESIT_Fu,ESIT_Pd!')) 
 
     ### Read in Data
     if level == 'surface': # 3d variables
@@ -90,11 +79,11 @@ def readSIC(varid,timeperiod,level):
         data.close()
     elif level == 'zonmean': # 3d variables (zonal mean!)
         varidz = varid + '_' + level
-        filename = totaldirectory + varidz + '_1700-2000.nc'
+        filename = totaldirectory + varidz + '_1900-2000.nc'
         data = Dataset(filename,'r')
         lev = data.variables['level'][:17] # goes to 10 hPa instead of 1 hPa
         lat = data.variables['lat'][:]
-        lon = data.variables['lon'][:]
+        lon = data.variables['lon'][:] 
         varq = data.variables['%s' % varid][:,:17,:,:].squeeze() # goes to 10 hPa instead of 1 hPa
         data.close()
     else:
@@ -124,13 +113,13 @@ def readSIC(varid,timeperiod,level):
         var = var*1000. # Meters to Millimeters 
         print('Completed: Changed units (m to mm)!')
         
-    print('Completed: Read members 1-301!')
+    print('Completed: Read members 1-101!')
 
-    print('>>>>>>>>>> Completed: Finished readSIC function!')
+    print('>>>>>>>>>> Completed: Finished readE3SM_SIT function!')
     return lat,lon,lev,var
 
 ###############################################################################
 ###############################################################################
 ### Test functions - do not use!
-#lat,lon,lev,var1 = readSIC('Z500','Fu','surface')
-#lat,lon,lev,var = readSIC('Z500','Pd','surface')
+#lat,lon,lev,var1 = readE3SM_SIT('Z500','ESIT_Fu','surface')
+#lat,lon,lev,var = readE3SM_SIT('THICK','ESIT_Pd','surface')

@@ -1,10 +1,11 @@
 """
-Script plots relationship between vertical warming in modeled data sets
+Script plots relationship between vertical warming in modeled data sets for
+the E3SM experiments
 
 Notes
 -----
     Author : Zachary Labe
-    Date   : 21 February 2020
+    Date   : 28 February 2020
 """
 
 ### Import modules
@@ -19,9 +20,12 @@ import read_ExpMonthly as NUDG
 import read_ShortCoupled as COUP
 import read_SIT as THICK
 import read_SIC as CONC
+import read_SIT_E3SM as E3SIT
+import read_SIC_E3SM as E3SIC
+import read_OldIceExperi as OLD
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/Vertical_Model/'
+directoryfigure = '/home/zlabe/Desktop/AA/Vertical_Model/E3SM/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -30,25 +34,20 @@ currentdy = str(now.day)
 currentyr = str(now.year)
 currenttime = currentmn + '_' + currentdy + '_' + currentyr
 titletime = currentmn + '/' + currentdy + '/' + currentyr
-print('\n' '----Plotting Vertical Warming- %s----' % titletime)
+print('\n' '----Plotting Vertical Warming for E3SM- %s----' % titletime)
 
 ### Add parameters
 datareader = True
 latpolar = 65.
-cps = 'none'
 variable = 'TEMP'
 period = 'FM' 
 level = 'profile'
-if cps == 'none':
-    runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
-                r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
-elif cps == 'yes':
-    runnames = [r'AA-2030',r'AA-2060',r'AA-2090-cps',
-            r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
+runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
+            r'E3SM-SIT-Pd',r'E3SM-Pd',r'E3SM-Pi']
 runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC']
 
 ### Function to read in data
-def readData(simu,period,varia,level,cps):
+def readData(simu,period,varia,level):
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
@@ -59,8 +58,8 @@ def readData(simu,period,varia,level,cps):
         lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level,'none')
         lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2090':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,cps)
-        lat,lon,lev,historical = CONT.readControl(varia,level,cps)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     ############################################################################### 
     elif simu == 'coupled':
         lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
@@ -70,9 +69,28 @@ def readData(simu,period,varia,level,cps):
         lat,lon,lev,future = THICK.readSIT(varia,'SIT_Fu',level)
         lat,lon,lev,historical = THICK.readSIT(varia,'SIT_Pd',level)
     ############################################################################### 
-    elif simu == 'SIC':
+    elif simu == 'SIC_Pd':
         lat,lon,lev,future = CONC.readSIC(varia,'Fu',level)
         lat,lon,lev,historical = CONC.readSIC(varia,'Pd',level)
+    ############################################################################### 
+    elif simu == 'SIC_Pi':
+        lat,lon,lev,future = CONC.readSIC(varia,'Fu',level)
+        lat,lon,lev,historical = CONC.readSIC(varia,'Pi',level)
+    ############################################################################### 
+    elif simu == 'E3SIT':
+        lat,lon,lev,future = E3SIT.readE3SM_SIT(varia,'ESIT_Fu',level)
+        lat,lon,lev,historical = E3SIT.readE3SM_SIT(varia,'ESIT_Pd',level)
+    ############################################################################### 
+    elif simu == 'E3SIC_Pd':
+        lat,lon,lev,future = E3SIC.readE3SM_SIC(varia,'ESIC_Fu',level)
+        lat,lon,lev,historical = E3SIC.readE3SM_SIC(varia,'ESIC_Pd',level)
+    elif simu == 'E3SIC_Pi':
+        lat,lon,lev,future = E3SIC.readE3SM_SIC(varia,'ESIC_Fu',level)
+        lat,lon,lev,historical = E3SIC.readE3SM_SIC(varia,'ESIC_Pi',level)
+    ############################################################################### 
+    elif simu == 'OLD':
+        lat,lon,lev,future = OLD.readOldIceExperi(varia,'FICT',level)
+        lat,lon,lev,historical = OLD.readOldIceExperi(varia,'HIT',level)
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
@@ -160,12 +178,12 @@ def readData(simu,period,varia,level,cps):
     return lat,lon,lev,anommean,nens,pruns,climo
 
 ### Call data
-lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,cps)
-lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,cps)
-lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,cps)
-lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level,cps)
-lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level,cps)
-lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level,cps)
+lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level)
+lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level)
+lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level)
+lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('E3SIT',period,variable,level)
+lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('E3SIC_Pd',period,variable,level)
+lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('E3SIC_Pi',period,variable,level)
 
 ### Chunk data
 dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
@@ -269,7 +287,7 @@ for i in range(len(runnames)):
                 color='k')
     
     ### Plot contours
-    cs = plt.contourf(latq,levq,var,limit,extend='both')
+    cs = plt.contourf(latq,levq,varnomask,limit,extend='both')
 #    cs1 = plt.contour(latq,levq,clim,np.arange(-90,95,5),
 #                      linewidths=0.3,colors='k',extend='both')
 #    cs2 = plt.contourf(latq,levq,pvar,colors='None',
@@ -310,10 +328,6 @@ cbar.ax.tick_params(axis='x', size=.001,labelsize=7)
 cbar.outline.set_edgecolor('dimgrey')
     
 plt.subplots_adjust(bottom=0.17,hspace=0.08,wspace=0.08)  
-if cps == 'none':
-    plt.savefig(directoryfigure + 'VerticalModels_TEMP_%s.png' % period,
-            dpi=300)
-elif cps == 'yes':
-    plt.savefig(directoryfigure + 'VerticalModels_TEMP_%s_CPS.png' % period,
-                dpi=300)
+plt.savefig(directoryfigure + 'VerticalModels_TEMP_%s_E3SM.png' % period,
+        dpi=300)
 print('Completed: Script done!')

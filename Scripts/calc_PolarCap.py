@@ -10,6 +10,9 @@ def PolarCap(simu,vari,level,latpolar,period):
     import read_ShortCoupled as COUP
     import read_SIT as THICK
     import read_SIC as CONC
+    import read_SIT_E3SM as E3SIT
+    import read_SIC_E3SM as E3SIC
+    import read_OldIceExperi as OLD
     
     if any([vari=='T700',vari=='T500']):
         varia = 'TEMP'
@@ -24,14 +27,14 @@ def PolarCap(simu,vari,level,latpolar,period):
     ############################################################################### 
     ############################################################################### 
     if simu == 'AA-2030':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2060':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2090':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     ############################################################################### 
     elif simu == 'coupled':
         lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
@@ -41,9 +44,28 @@ def PolarCap(simu,vari,level,latpolar,period):
         lat,lon,lev,future = THICK.readSIT(varia,'SIT_Fu',level)
         lat,lon,lev,historical = THICK.readSIT(varia,'SIT_Pd',level)
     ############################################################################### 
-    elif simu == 'SIC':
+    elif simu == 'SIC_Pd':
         lat,lon,lev,future = CONC.readSIC(varia,'Fu',level)
         lat,lon,lev,historical = CONC.readSIC(varia,'Pd',level)
+    ############################################################################### 
+    elif simu == 'SIC_Pi':
+        lat,lon,lev,future = CONC.readSIC(varia,'Fu',level)
+        lat,lon,lev,historical = CONC.readSIC(varia,'Pi',level)
+    ############################################################################### 
+    elif simu == 'E3SIT':
+        lat,lon,lev,future = E3SIT.readE3SM_SIT(varia,'ESIT_Fu',level)
+        lat,lon,lev,historical = E3SIT.readE3SM_SIT(varia,'ESIT_Pd',level)
+    ############################################################################### 
+    elif simu == 'E3SIC_Pd':
+        lat,lon,lev,future = E3SIC.readE3SM_SIC(varia,'ESIC_Fu',level)
+        lat,lon,lev,historical = E3SIC.readE3SM_SIC(varia,'ESIC_Pd',level)
+    elif simu == 'E3SIC_Pi':
+        lat,lon,lev,future = E3SIC.readE3SM_SIC(varia,'ESIC_Fu',level)
+        lat,lon,lev,historical = E3SIC.readE3SM_SIC(varia,'ESIC_Pi',level)
+    ############################################################################### 
+    elif simu == 'OLD':
+        lat,lon,lev,future = OLD.readOldIceExperi(varia,'FICT',level)
+        lat,lon,lev,historical = OLD.readOldIceExperi(varia,'HIT',level)
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
