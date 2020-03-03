@@ -61,6 +61,10 @@ def readOBS(experi,varid,level,period):
         directorydata = '/seley/zlabe/'
         totaldirectory = directorydata + experi + '/monthly/'
         filename = totaldirectory + varid + '_1948-2017.nc'       
+    elif experi == 'ERA5': # (1979-2019)
+        directorydata = '/seley/zlabe/'
+        totaldirectory = directorydata + experi + '/monthly/'
+        filename = totaldirectory + varid + '_1979-2019.nc'      
 
     ### Read in Data
     if level == 'surface': # 3d variables
@@ -105,7 +109,7 @@ def readOBS(experi,varid,level,period):
     elif varid == 'SWE':
         var = var*1000. # Meters to Millimeters 
         print('Completed: Changed units (m to mm)!')
-    if experi == 'ERAI_Present':
+    if experi in ('ERAI_Present','ERA5'):
         if varid == 'SLP':
             var = var/100 # Pa to hPa
             print('Completed: Changed units (Pa to hPa)!')
@@ -131,6 +135,10 @@ def readOBS(experi,varid,level,period):
         var = var[yearq]
     elif experi == 'ERAI_Present':
         years = np.arange(1979,2018+1,1)
+        yearq = np.where((years >= 1979) & (years <= 2017))[0]
+        var = var[yearq]
+    elif experi == 'ERA5':
+        years = np.arange(1979,2019+1,1)
         yearq = np.where((years >= 1979) & (years <= 2017))[0]
         var = var[yearq]
     
@@ -171,6 +179,9 @@ def readOBS(experi,varid,level,period):
     elif period == 'MA':
         print('Calculating over %s months!' % period)
         varm = np.nanmean(var[:,2:4],axis=1)
+    elif period == 'JJA':
+        print('Calculating over %s months!' % period)
+        varm = np.nanmean(var[:,5:8],axis=1)
     elif period == 'annual':
         print('Calculating over %s months!' % period)
         varm = np.nanmean(var,axis=1)
@@ -260,7 +271,12 @@ def calcOBS_PolarCap(var,lat,lon,latpolar):
 ### Test functions (do not use!)
 #import numpy as np
 #import matplotlib.pyplot as plt
-#lat,lon,lev,var = readOBS('ERAI_Present','T2M','surface','DJF')
+#lat,lon,lev,var = readOBS('ERA5','U10','surface','DJF')
 #shi = calcOBS_SHI(var,lat,lon)
 #ubi = calcOBS_UBI(var,lat,lon)
 #varave = calcOBS_PolarCap(var,lat,lon,65.)
+#
+#lat,lon,lev,var1 = readOBS('NCEP1','U10','surface','DJF')
+#shi1 = calcOBS_SHI(var1,lat,lon)
+#ubi1 = calcOBS_UBI(var1,lat,lon)
+#varave1 = calcOBS_PolarCap(var1,lat,lon,65.)

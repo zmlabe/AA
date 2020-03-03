@@ -35,6 +35,11 @@ epochq = 10
 variable = 'TEMP'
 period = 'DJF' 
 level = 'profile'
+dataERA = 'ERA5'
+if dataERA == 'ERAI_Present':
+    datatitle = 'ERA-Interim'
+else:
+    datatitle = 'ERA5'
 
 ###############################################################################
 ###############################################################################
@@ -44,7 +49,7 @@ if datareader == True:
     ###########################################################################
     ### Read in reanalysis data
     years = np.arange(1979,2017+1,1)
-    late,lone,leve,vare = REAN.readOBS('ERAI_Present',variable,level,period) 
+    late,lone,leve,vare = REAN.readOBS(dataERA,variable,level,period) 
     latr,lonr,levr,varr = REAN.readOBS('NCEP1',variable,level,period)
     
     varpole = np.nanmean(vare,axis=3)
@@ -104,7 +109,7 @@ cs2 = plt.contourf(timeqe,levqe,prunse,colors='None',
 
 plt.ylabel(r'\textbf{Pressure [hPa]}',color='k',fontsize=9)
 plt.xlabel(r'\textbf{Latitude [$\bf{^{\circ}}$N]}',color='k',fontsize=9)
-plt.title(r'\textbf{ERA-Interim}',color='k',fontsize=11)
+plt.title(r'\textbf{%s}' % datatitle,color='k',fontsize=11)
 
 plt.yscale('log',nonposy='clip')
 plt.ylim([1000,10])
@@ -173,7 +178,7 @@ cbar.set_label(r'\textbf{[2017-2008]--[1988-1979] T $^\circ$C}',color='k',
 
 plt.subplots_adjust(bottom=0.2)
 
-plt.savefig(directoryfigure + 'VerticalT_Epoch_Reanalysis.png',dpi=300)
+plt.savefig(directoryfigure + 'VerticalT_Epoch_Reanalysis_%s.png' % datatitle,dpi=300)
 
 ############################################################################
 ############################################################################
@@ -224,7 +229,7 @@ cs2 = plt.contourf(timeqe,levqe,prunse,colors='None',
 
 plt.ylabel(r'\textbf{Pressure [hPa]}',color='k',fontsize=9)
 plt.xlabel(r'\textbf{Latitude [$\bf{^{\circ}}$N]}',color='k',fontsize=9)
-plt.title(r'\textbf{ERA-Interim}',color='k',fontsize=11)
+plt.title(r'\textbf{%s}' % datatitle,color='k',fontsize=11)
 
 plt.yscale('log',nonposy='clip')
 plt.ylim([1000,200])
@@ -304,4 +309,4 @@ cbar.set_label(r'\textbf{[2017-2008]--[1988-1979] T $^\circ$C}',color='k',
 
 plt.subplots_adjust(bottom=0.2)
 
-plt.savefig(directoryfigure + 'VerticalT_Troposphere_Epoch_Reanalysis.png',dpi=300)
+plt.savefig(directoryfigure + 'VerticalT_Troposphere_Epoch_Reanalysis_%s.png' % datatitle,dpi=300)

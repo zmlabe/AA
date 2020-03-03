@@ -71,8 +71,8 @@ if datareader == True:
     ###########################################################################
     ### Read in reanalysis data
     years = np.arange(1979,2017+1,1)
-    late,lone,leve,thicke = REAN.readOBS('ERAI_Present',variable,level,period)
-    late,lone,leve,slpe = REAN.readOBS('ERAI_Present','SLP',level,period)
+    late,lone,leve,thicke = REAN.readOBS('ERA5',variable,level,period)
+    late,lone,leve,slpe = REAN.readOBS('ERA5','SLP',level,period)
     she = REAN.calcOBS_SHI(slpe,late,lone)
     vare= REAN.calcOBS_PolarCap(thicke,late,lone,latpolar)
     
