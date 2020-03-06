@@ -48,7 +48,7 @@ else:
 if datareader == True:
     ###########################################################################
     ### Read in reanalysis data
-    years = np.arange(1979,2017+1,1)
+    years = np.arange(1979,2019+1,1)
     late,lone,leve,vare = REAN.readOBS(dataERA,variable,level,period) 
     latr,lonr,levr,varr = REAN.readOBS('NCEP1',variable,level,period)
     
@@ -60,11 +60,11 @@ if datareader == True:
 ###############################################################################
 ### Calculate reanalysis epochs
 oldthicke = np.nanmean(varpole[:epochq],axis=0)   # 1979-1988
-newthicke = np.nanmean(varpole[-epochq:],axis=0)  # 2008-2017
+newthicke = np.nanmean(varpole[-epochq:],axis=0)  # 2010-2019
 diffe = newthicke - oldthicke
 
 oldthickr = np.nanmean(varpolr[:epochq],axis=0)   # 1979-1988
-newthickr = np.nanmean(varpolr[-epochq:],axis=0)  # 2008-2017
+newthickr = np.nanmean(varpolr[-epochq:],axis=0)  # 20010-2019
 diffr = newthickr - oldthickr
 
 ### Significance testing
@@ -173,7 +173,7 @@ cbar.set_ticks(barlim)
 cbar.set_ticklabels(list(map(str,barlim))) 
 cbar.ax.tick_params(axis='x', size=.001,labelsize=6)
 cbar.outline.set_edgecolor('dimgrey')
-cbar.set_label(r'\textbf{[2017-2008]--[1988-1979] T $^\circ$C}',color='k',
+cbar.set_label(r'\textbf{[2019-2010]--[1988-1979] T $^\circ$C}',color='k',
                          fontsize=6,labelpad=-27)
 
 plt.subplots_adjust(bottom=0.2)
@@ -304,7 +304,7 @@ cbar.set_ticks(barlim)
 cbar.set_ticklabels(list(map(str,barlim))) 
 cbar.ax.tick_params(axis='x', size=.001,labelsize=6)
 cbar.outline.set_edgecolor('dimgrey')
-cbar.set_label(r'\textbf{[2017-2008]--[1988-1979] T $^\circ$C}',color='k',
+cbar.set_label(r'\textbf{[2019-2010]--[1988-1979] T $^\circ$C}',color='k',
                          fontsize=6,labelpad=-27)
 
 plt.subplots_adjust(bottom=0.2)

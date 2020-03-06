@@ -1,10 +1,11 @@
 """
-Script plots relationship between vertical warming and the Ural Blocking
+Script plots relationship between vertical warming and the Ural Blocking for
+all model experiments
 
 Notes
 -----
     Author : Zachary Labe
-    Date   : 26 February 2020
+    Date   : 4 March 2020
 """
 
 ### Import modules
@@ -20,7 +21,7 @@ import read_OBS as REAN
 import read_StationOBS as SOBS
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/Emergent/UBI/Z500/'
+directoryfigure = '/home/zlabe/Desktop/AA/Emergent/UBI/Z500/ALL/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -29,18 +30,21 @@ currentdy = str(now.day)
 currentyr = str(now.year)
 currenttime = currentmn + '_' + currentdy + '_' + currentyr
 titletime = currentmn + '/' + currentdy + '/' + currentyr
-print('\n' '----Plotting Scatter of Warming-Ural Blocking - %s----' % titletime)
+print('\n' '----Plotting Scatter of Warming-Ural Blocking (ALL) - %s----' % titletime)
 
 ### Add parameters
 datareader = True
 latpolar = 65.
-variable = 'T2M'
+variable = 'THICK'
 variable2 = 'Z500'
 period = 'DJF' 
 level = 'surface'
 runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
-            r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
-runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC_Pd']
+            r'2.3--2.1',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pi',r'$\Delta$SIC-Pd',r'$\Delta$NET']
+runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC_Pi','SIC_Pd','OLD']
+
+runnames_E3SM = ['E3SM-SIT-Pd','E3SM-Pi','E3SM-Pd']
+runnamesdata_E3SM = ['E3SIT','E3SIC_Pi','E3SIC_Pd']
 
 ###############################################################################
 ###############################################################################
@@ -56,6 +60,15 @@ if datareader == True:
         highq = SB.UBI(runnamesdata[i],period,variable2)
         polarave.append(polaraveq)
         high.append(highq)
+    ###########################################################################
+    ### Read in model data for E3SM
+    polarave_E3SM = []
+    high_E3SM = []
+    for i in range(len(runnames_E3SM)):
+        polaraveq_E3SM = CAP.PolarCap(runnamesdata_E3SM[i],variable,level,latpolar,period)
+        highq_E3SM = SB.UBI(runnamesdata_E3SM[i],period,variable2)
+        polarave_E3SM.append(polaraveq_E3SM)
+        high_E3SM.append(highq_E3SM)
     ###########################################################################
     ### Read in reanalysis data
     years = np.arange(1979,2019+1,1)
@@ -78,6 +91,13 @@ meanSHI = np.empty((len(high)))
 for i in range(len(runnames)):
     meanPOL[i] = np.nanmean(polarave[i])
     meanSHI[i] = np.nanmean(high[i])
+    
+### Calculate ensemble means for E3SM
+meanPOL_E3SM = np.empty((len(polarave_E3SM)))
+meanSHI_E3SM = np.empty((len(high_E3SM)))
+for i in range(len(runnames_E3SM)):
+    meanPOL_E3SM[i] = np.nanmean(polarave_E3SM[i])
+    meanSHI_E3SM[i] = np.nanmean(high_E3SM[i])
 
 ###############################################################################
 ###############################################################################
@@ -118,7 +138,12 @@ elif variable == 'T700':
     xaxis = np.arange(0,4.2,0.1)
 elif variable == 'T2M':
     xaxis = np.arange(0,10,0.1)
-slope,intercept,r_value,p_value,std_err = sts.linregress(meanPOL,meanSHI)
+
+### Combine all model data
+meanPOL_ALL = np.append(meanPOL,meanPOL_E3SM)
+meanSHI_ALL = np.append(meanSHI,meanSHI_E3SM)
+    
+slope,intercept,r_value,p_value,std_err = sts.linregress(meanPOL_ALL,meanSHI_ALL)
 linetrend = slope*xaxis + intercept
 
 ###############################################################################
@@ -161,13 +186,21 @@ if variable == 'THICK':
     plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
-    color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
+    color = cmocean.cm.thermal(np.linspace(0.01,1,len(runnames)))
     for i,c in zip(range(len(runnames)),color):
         plt.scatter(meanPOL[i],meanSHI[i],color=c,s=42,
-                    label=r'\textbf{%s}' % runnames[i],zorder=11,clip_on=False)
-        
+                    label=r'\textbf{%s}' % runnames[i],zorder=11,clip_on=False,
+                    edgecolor='k',linewidth=0.5)
     leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
                      bbox_to_anchor=(0.935,0.3),fancybox=True,ncol=1,frameon=False,
+                     handlelength=0,handletextpad=1)
+        
+    color = cmocean.cm.amp(np.linspace(0.15,1.1,len(runnames_E3SM)))
+    for i,c in zip(range(len(runnames_E3SM)),color):
+        plt.scatter(meanPOL_E3SM[i],meanSHI_E3SM[i],color=c,s=42,
+                    label=r'\textbf{%s}' % runnames_E3SM[i],zorder=11,clip_on=False,marker='x')   
+    leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
+                     bbox_to_anchor=(1,0.8),fancybox=True,ncol=1,frameon=False,
                      handlelength=0,handletextpad=1)
     
     plt.xticks(np.arange(0,100,10),map(str,np.arange(0,100,10)),size=8)
@@ -182,7 +215,7 @@ if variable == 'THICK':
     plt.text(0,43.8,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k',ha='left')
     
-    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_PAMIP-Nudge_%s.png' % variable,
+    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_ALL_%s.png' % variable,
                 dpi=300)
     
 elif variable == 'T700':
@@ -190,13 +223,21 @@ elif variable == 'T700':
     plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
-    color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
+    color = cmocean.cm.thermal(np.linspace(0.01,1,len(runnames)))
     for i,c in zip(range(len(runnames)),color):
         plt.scatter(meanPOL[i],meanSHI[i],color=c,s=42,
-                    label=r'\textbf{%s}' % runnames[i],zorder=11,clip_on=False)
-        
+                    label=r'\textbf{%s}' % runnames[i],zorder=11,clip_on=False,
+                    edgecolor='k',linewidth=0.5)
     leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
                      bbox_to_anchor=(0.935,0.3),fancybox=True,ncol=1,frameon=False,
+                     handlelength=0,handletextpad=1)
+        
+    color = cmocean.cm.amp(np.linspace(0.15,1.1,len(runnames_E3SM)))
+    for i,c in zip(range(len(runnames_E3SM)),color):
+        plt.scatter(meanPOL_E3SM[i],meanSHI_E3SM[i],color=c,s=42,
+                    label=r'\textbf{%s}' % runnames_E3SM[i],zorder=11,clip_on=False,marker='x')   
+    leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
+                     bbox_to_anchor=(1,0.8),fancybox=True,ncol=1,frameon=False,
                      handlelength=0,handletextpad=1)
     
     plt.xticks(np.arange(0,7.01,0.5),map(str,np.arange(0,7.01,0.5)),size=8)
@@ -212,7 +253,7 @@ elif variable == 'T700':
     plt.text(0,43.8,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
-    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_PAMIP-Nudge_%s.png' % variable,
+    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_ALL_%s.png' % variable,
                 dpi=300)
  
 elif variable == 'T500':
@@ -220,13 +261,21 @@ elif variable == 'T500':
     plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
-    color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
+    color = cmocean.cm.thermal(np.linspace(0.01,1,len(runnames)))
     for i,c in zip(range(len(runnames)),color):
         plt.scatter(meanPOL[i],meanSHI[i],color=c,s=42,
-                    label=r'\textbf{%s}' % runnames[i],zorder=11,clip_on=False)
-        
+                    label=r'\textbf{%s}' % runnames[i],zorder=11,clip_on=False,
+                    edgecolor='k',linewidth=0.5)
     leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
                      bbox_to_anchor=(0.935,0.3),fancybox=True,ncol=1,frameon=False,
+                     handlelength=0,handletextpad=1)
+        
+    color = cmocean.cm.amp(np.linspace(0.15,1.1,len(runnames_E3SM)))
+    for i,c in zip(range(len(runnames_E3SM)),color):
+        plt.scatter(meanPOL_E3SM[i],meanSHI_E3SM[i],color=c,s=42,
+                    label=r'\textbf{%s}' % runnames_E3SM[i],zorder=11,clip_on=False,marker='x')   
+    leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
+                     bbox_to_anchor=(1,0.8),fancybox=True,ncol=1,frameon=False,
                      handlelength=0,handletextpad=1)
     
     plt.xticks(np.arange(0,2.01,0.25),map(str,np.arange(0,2.01,0.25)),size=8)
@@ -242,7 +291,7 @@ elif variable == 'T500':
     plt.text(0,43.8,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
-    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_PAMIP-Nudge_%s.png' % variable,
+    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_ALL_%s.png' % variable,
                 dpi=300)
     
 elif variable == 'T2M':
@@ -252,13 +301,21 @@ elif variable == 'T2M':
     plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k')
     
-    color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
+    color = cmocean.cm.thermal(np.linspace(0.01,1,len(runnames)))
     for i,c in zip(range(len(runnames)),color):
         plt.scatter(meanPOL[i],meanSHI[i],color=c,s=42,
-                    label=r'\textbf{%s}' % runnames[i],zorder=11,clip_on=False)
-        
+                    label=r'\textbf{%s}' % runnames[i],zorder=11,clip_on=False,
+                    edgecolor='k',linewidth=0.5)
     leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
                      bbox_to_anchor=(0.935,0.3),fancybox=True,ncol=1,frameon=False,
+                     handlelength=0,handletextpad=1)
+        
+    color = cmocean.cm.amp(np.linspace(0.15,1.1,len(runnames_E3SM)))
+    for i,c in zip(range(len(runnames_E3SM)),color):
+        plt.scatter(meanPOL_E3SM[i],meanSHI_E3SM[i],color=c,s=42,
+                    label=r'\textbf{%s}' % runnames_E3SM[i],zorder=11,clip_on=False,marker='x')   
+    leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
+                     bbox_to_anchor=(1,0.8),fancybox=True,ncol=1,frameon=False,
                      handlelength=0,handletextpad=1)
     
     plt.xticks(np.arange(0,16,2),map(str,np.arange(0,16,2)),size=8)
@@ -274,6 +331,6 @@ elif variable == 'T2M':
     plt.text(0,43.8,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
-    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_PAMIP-Nudge_%s.png' % variable,
+    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_ALL_%s.png' % variable,
                 dpi=300)
 

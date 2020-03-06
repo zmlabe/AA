@@ -34,13 +34,13 @@ print('\n' '----Plotting Scatter of Warming-Ural High - %s----' % titletime)
 ### Add parameters
 datareader = True
 latpolar = 65.
-variable = 'T700'
+variable = 'THICK'
 variable2 = 'SLP'
 period = 'DJF' 
 level = 'surface'
 runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
             r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
-runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC']
+runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC_Pd']
 
 ###############################################################################
 ###############################################################################
@@ -58,16 +58,16 @@ if datareader == True:
         high.append(highq)
     ###########################################################################
     ### Read in reanalysis data
-    years = np.arange(1979,2017+1,1)
-    late,lone,leve,thicke = REAN.readOBS('ERAI_Present',variable,level,period)
-    late,lone,leve,slpe = REAN.readOBS('ERAI_Present',variable2,level,period)
+    years = np.arange(1979,2019+1,1)
+    late,lone,leve,thicke = REAN.readOBS('ERA5',variable,level,period)
+    late,lone,leve,slpe = REAN.readOBS('ERA5',variable2,level,period)
     she = REAN.calcOBS_UBI(slpe,late,lone)
     vare= REAN.calcOBS_PolarCap(thicke,late,lone,latpolar)
     
-    latr,lonr,levr,thickr = REAN.readOBS('NCEP1',variable,level,period)
+    latrr,lonrr,levr,thickr = REAN.readOBS('NCEP1',variable,level,period)
     latr,lonr,levr,slpr = REAN.readOBS('NCEP1',variable2,level,period)
     shr = REAN.calcOBS_UBI(slpr,latr,lonr)
-    varr= REAN.calcOBS_PolarCap(thickr,latr,lonr,latpolar)
+    varr= REAN.calcOBS_PolarCap(thickr,latrr,lonrr,latpolar)
  
 ###############################################################################
 ###############################################################################
@@ -158,7 +158,7 @@ ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
 
 if variable == 'THICK':
     plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False)
-    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
     color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
@@ -187,7 +187,7 @@ if variable == 'THICK':
     
 elif variable == 'T700':
     plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False)
-    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
     color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
@@ -217,7 +217,7 @@ elif variable == 'T700':
  
 elif variable == 'T500':
     plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False)
-    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
     color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
@@ -246,10 +246,10 @@ elif variable == 'T500':
                 dpi=300)
     
 elif variable == 'T2M':
-    plt.axvspan(diffobs.min(),diffobs.max(),alpha=0.6,color='darkgrey',
+    plt.axvspan(diffobs.min(),diffobs.max(),alpha=1,color='darkgrey',
                 clip_on=False,linewidth=0)
-    plt.axvspan(diffe,diffr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
-    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k')
     
     color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))

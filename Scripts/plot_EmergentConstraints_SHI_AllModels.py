@@ -70,16 +70,16 @@ if datareader == True:
         high_E3SM.append(highq_E3SM)
     ###########################################################################
     ### Read in reanalysis data
-    years = np.arange(1979,2017+1,1)
+    years = np.arange(1979,2019+1,1)
     late,lone,leve,thicke = REAN.readOBS('ERA5',variable,level,period)
     late,lone,leve,slpe = REAN.readOBS('ERA5','SLP',level,period)
     she = REAN.calcOBS_SHI(slpe,late,lone)
     vare= REAN.calcOBS_PolarCap(thicke,late,lone,latpolar)
     
-    latr,lonr,levr,thickr = REAN.readOBS('NCEP1',variable,level,period)
+    latrr,lonrr,levr,thickr = REAN.readOBS('NCEP1',variable,level,period)
     latr,lonr,levr,slpr = REAN.readOBS('NCEP1','SLP',level,period)
     shr = REAN.calcOBS_SHI(slpr,latr,lonr)
-    varr= REAN.calcOBS_PolarCap(thickr,latr,lonr,latpolar)
+    varr= REAN.calcOBS_PolarCap(thickr,latrr,lonrr,latpolar)
  
 ###############################################################################
 ###############################################################################
@@ -183,7 +183,7 @@ ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
 
 if variable == 'THICK':
     plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False)
-    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k')
     
     color = cmocean.cm.thermal(np.linspace(0.01,1,len(runnames)))
@@ -215,12 +215,12 @@ if variable == 'THICK':
     plt.text(91,3.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k',ha='right')
     
-    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_PAMIP-Nudge_%s.png' % variable,
+    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_ALL_%s.png' % variable,
                 dpi=300)
     
 elif variable == 'T700':
     plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False)
-    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
     color = cmocean.cm.thermal(np.linspace(0.01,1,len(runnames)))
@@ -253,12 +253,12 @@ elif variable == 'T700':
     plt.text(0,3.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
-    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_PAMIP-Nudge_%s.png' % variable,
+    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_ALL_%s.png' % variable,
                 dpi=300)
  
 elif variable == 'T500':
     plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False)
-    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
     color = cmocean.cm.thermal(np.linspace(0.01,1,len(runnames)))
@@ -291,14 +291,14 @@ elif variable == 'T500':
     plt.text(0,3.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
-    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_PAMIP-Nudge_%s.png' % variable,
+    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_ALL_%s.png' % variable,
                 dpi=300)
     
 elif variable == 'T2M':
-    plt.axvspan(diffobs.min(),diffobs.max(),alpha=0.6,color='darkgrey',
+    plt.axvspan(diffobs.min(),diffobs.max(),alpha=1,color='k',
                 clip_on=False,linewidth=0)
-    plt.axvspan(diffe,diffr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
-    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k')
     
     color = cmocean.cm.thermal(np.linspace(0.01,1,len(runnames)))

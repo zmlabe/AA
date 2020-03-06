@@ -9,13 +9,13 @@ def readStationData(datasets,years):
     directorydata = '/home/zlabe/Documents/Projects/IceVarFigs/Data/'
     
     ### Set time
-    yearall = np.arange(1900,2018+1,1)
+    yearall = np.arange(1900,2019+1,1)
     
     ### Read in data
     datat = np.empty((len(datasets),len(yearall)))
     for i in range(len(datasets)):
         datat[i] = np.genfromtxt(directorydata + '%s_Arctic_%s.txt' % (datasets[i],
-                                 2018),delimiter=',',skip_header=1,
+                                 2019),delimiter=',',skip_header=1,
                                  unpack=True,usecols=[1])
     
     ### Mask correct time series

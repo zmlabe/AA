@@ -57,10 +57,10 @@ def readOBS(experi,varid,level,period):
         directorydata = '/seley/zlabe/'
         totaldirectory = directorydata + experi + '/monthly/'
         filename = totaldirectory + varid + '_1979-2018.nc'
-    elif experi == 'NCEP1': # (1948-2017)
+    elif experi == 'NCEP1': # (1948-2019)
         directorydata = '/seley/zlabe/'
         totaldirectory = directorydata + experi + '/monthly/'
-        filename = totaldirectory + varid + '_1948-2017.nc'       
+        filename = totaldirectory + varid + '_1948-2019.nc'       
     elif experi == 'ERA5': # (1979-2019)
         directorydata = '/seley/zlabe/'
         totaldirectory = directorydata + experi + '/monthly/'
@@ -109,7 +109,7 @@ def readOBS(experi,varid,level,period):
     elif varid == 'SWE':
         var = var*1000. # Meters to Millimeters 
         print('Completed: Changed units (m to mm)!')
-    if experi in ('ERAI_Present','ERA5'):
+    if experi in ('ERAI_Present'):
         if varid == 'SLP':
             var = var/100 # Pa to hPa
             print('Completed: Changed units (Pa to hPa)!')
@@ -122,6 +122,10 @@ def readOBS(experi,varid,level,period):
                   varid=='GEOP']):
             var = var/9.81 # m^2 s^-2 to m
             print('Completed: Changed units for geopotential!')
+    elif experi in ('ERA5'):
+        if varid == 'SLP':
+            var = var/100 # Pa to hPa
+            print('Completed: Changed units (Pa to hPa)!')
         
     print('Completed: Read years 1979-2017!')
     
@@ -130,16 +134,16 @@ def readOBS(experi,varid,level,period):
     ###########################################################################
     ### Select same time period for reanalysis data (1979-2017)
     if experi == 'NCEP1':
-        years = np.arange(1948,2017+1,1)
-        yearq = np.where((years >= 1979) & (years <= 2017))[0]
+        years = np.arange(1948,2019+1,1)
+        yearq = np.where((years >= 1979) & (years <= 2019))[0]
         var = var[yearq]
     elif experi == 'ERAI_Present':
         years = np.arange(1979,2018+1,1)
-        yearq = np.where((years >= 1979) & (years <= 2017))[0]
+        yearq = np.where((years >= 1979) & (years <= 2018))[0]
         var = var[yearq]
     elif experi == 'ERA5':
         years = np.arange(1979,2019+1,1)
-        yearq = np.where((years >= 1979) & (years <= 2017))[0]
+        yearq = np.where((years >= 1979) & (years <= 2019))[0]
         var = var[yearq]
     
     ###########################################################################
@@ -269,14 +273,20 @@ def calcOBS_PolarCap(var,lat,lon,latpolar):
     return varave
 
 ### Test functions (do not use!)
-#import numpy as np
-#import matplotlib.pyplot as plt
-#lat,lon,lev,var = readOBS('ERA5','U10','surface','DJF')
+import numpy as np
+import matplotlib.pyplot as plt
+varaa = 'THICK'
+#lat,lon,lev,var = readOBS('ERA5',varaa,'surface','DJF')
 #shi = calcOBS_SHI(var,lat,lon)
 #ubi = calcOBS_UBI(var,lat,lon)
-#varave = calcOBS_PolarCap(var,lat,lon,65.)
-#
-#lat,lon,lev,var1 = readOBS('NCEP1','U10','surface','DJF')
+#varave = calcOBS_PolarCap(var,lat,lon,67.)
+
+#lat,lon,lev,var1 = readOBS('NCEP1',varaa,'surface','DJF')
 #shi1 = calcOBS_SHI(var1,lat,lon)
 #ubi1 = calcOBS_UBI(var1,lat,lon)
-#varave1 = calcOBS_PolarCap(var1,lat,lon,65.)
+#varave1 = calcOBS_PolarCap(var1,lat,lon,67.)
+
+#lat,lon,lev,var2 = readOBS('ERAI_Present',varaa,'surface','DJF')
+#shi2 = calcOBS_SHI(var2,lat,lon)
+#ubi2 = calcOBS_UBI(var2,lat,lon)
+#varave2 = calcOBS_PolarCap(var2,lat,lon,67.)
