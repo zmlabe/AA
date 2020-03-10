@@ -34,7 +34,7 @@ print('\n' '----Plotting Scatter of Warming-Ural High - %s----' % titletime)
 ### Add parameters
 datareader = True
 latpolar = 65.
-variable = 'THICK'
+variable = 'T700'
 variable2 = 'SLP'
 period = 'DJF' 
 level = 'surface'

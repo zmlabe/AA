@@ -34,7 +34,7 @@ print('\n' '----Plotting Scatter of Warming-Ural Blocking - %s----' % titletime)
 ### Add parameters
 datareader = True
 latpolar = 65.
-variable = 'T2M'
+variable = 'THICK'
 variable2 = 'Z500'
 period = 'DJF' 
 level = 'surface'
@@ -158,7 +158,7 @@ ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
 
 if variable == 'THICK':
     plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False)
-    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
     color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
@@ -187,7 +187,7 @@ if variable == 'THICK':
     
 elif variable == 'T700':
     plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False)
-    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
     color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
@@ -217,7 +217,7 @@ elif variable == 'T700':
  
 elif variable == 'T500':
     plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False)
-    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k',clip_on=False)
     
     color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))
@@ -246,10 +246,10 @@ elif variable == 'T500':
                 dpi=300)
     
 elif variable == 'T2M':
-    plt.axvspan(diffobs.min(),diffobs.max(),alpha=0.6,color='darkgrey',
+    plt.axvspan(diffobs.min(),diffobs.max(),alpha=1,color='k',
                 clip_on=False,linewidth=0)
-    plt.axvspan(diffe,diffr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
-    plt.axhspan(diffshe,diffshr,alpha=0.6,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axvspan(diffe,diffr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
+    plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k')
     
     color = cmocean.cm.thermal(np.linspace(0,0.9,len(runnames)))

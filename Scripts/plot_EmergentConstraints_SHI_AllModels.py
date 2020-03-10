@@ -35,7 +35,7 @@ print('\n' '----Plotting Scatter of Warming-High (ALL)- %s----' % titletime)
 ### Add parameters
 datareader = True
 latpolar = 65.
-variable = 'T500'
+variable = 'T700'
 period = 'DJF' 
 level = 'surface'
 runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
