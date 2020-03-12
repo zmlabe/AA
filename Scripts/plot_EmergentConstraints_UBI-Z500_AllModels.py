@@ -35,7 +35,7 @@ print('\n' '----Plotting Scatter of Warming-Ural Blocking (ALL) - %s----' % titl
 ### Add parameters
 datareader = True
 latpolar = 65.
-variable = 'THICK'
+variable = 'T500'
 variable2 = 'Z500'
 period = 'DJF' 
 level = 'surface'
@@ -215,7 +215,7 @@ if variable == 'THICK':
     plt.text(0,43.8,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k',ha='left')
     
-    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_ALL_%s.png' % variable,
+    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_ALL_%s_E3SMB.png' % variable,
                 dpi=300)
     
 elif variable == 'T700':
@@ -253,7 +253,7 @@ elif variable == 'T700':
     plt.text(0,43.8,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
-    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_ALL_%s.png' % variable,
+    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_ALL_%s_E3SMB.png' % variable,
                 dpi=300)
  
 elif variable == 'T500':
@@ -291,7 +291,7 @@ elif variable == 'T500':
     plt.text(0,43.8,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
-    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_ALL_%s.png' % variable,
+    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_ALL_%s_E3SMB.png' % variable,
                 dpi=300)
     
 elif variable == 'T2M':
@@ -331,6 +331,6 @@ elif variable == 'T2M':
     plt.text(0,43.8,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
-    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_ALL_%s.png' % variable,
+    plt.savefig(directoryfigure + 'UBI_EmergentConstraints_ALL_%s_E3SMB.png' % variable,
                 dpi=300)
 

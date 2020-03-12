@@ -52,13 +52,19 @@ def readE3SM_SIT(varid,timeperiod,level):
         directorydata = '/seley/ypeings/simu/'
         totaldirectory = directorydata + experi + '/monthly/'
         filename = totaldirectory + varid + '_1900-2000.nc'
-        print('-----------USING DOE E3SM EXPERIMENTS!-----------')
+        print('-----------USING DOE SIT E3SM EXPERIMENTS!-----------')
     elif timeperiod == 'ESIT_Pd':
         experi = 'PAMIP-1.9-E3SM'
         directorydata = '/seley/ypeings/simu/'
         totaldirectory = directorydata + experi + '/monthly/'
         filename = totaldirectory + varid + '_1900-2000.nc'
-        print('-----------USING DOE E3SM EXPERIMENTS!-----------')
+        print('-----------USING DOE SIT E3SM EXPERIMENTS!-----------')
+    elif timeperiod == 'ESIT_Pd_B':
+        experi = 'PAMIP-1.9-E3SM-B'
+        directorydata = '/seley/ypeings/simu/'
+        totaldirectory = directorydata + experi + '/monthly/'
+        filename = totaldirectory + varid + '_1900-2000.nc'
+        print('-----------USING DOE SIT E3SM EXPERIMENTS - *B*!-----------')
     else:
         print(ValueError('Selected wrong time period (ESIT_Fu,ESIT_Pd!')) 
 

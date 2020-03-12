@@ -48,7 +48,7 @@ def UBI(simu,period,varia):
     ############################################################################### 
     elif simu == 'E3SIT':
         lat,lon,lev,future = E3SIT.readE3SM_SIT(varia,'ESIT_Fu',level)
-        lat,lon,lev,historical = E3SIT.readE3SM_SIT(varia,'ESIT_Pd',level)
+        lat,lon,lev,historical = E3SIT.readE3SM_SIT(varia,'ESIT_Pd_B',level)
     ############################################################################### 
     elif simu == 'E3SIC_Pd':
         lat,lon,lev,future = E3SIC.readE3SM_SIC(varia,'ESIC_Fu',level)

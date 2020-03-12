@@ -35,7 +35,7 @@ print('\n' '----Plotting Scatter of Warming-High (ALL)- %s----' % titletime)
 ### Add parameters
 datareader = True
 latpolar = 65.
-variable = 'T700'
+variable = 'T2M'
 period = 'DJF' 
 level = 'surface'
 runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
@@ -215,7 +215,7 @@ if variable == 'THICK':
     plt.text(91,3.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k',ha='right')
     
-    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_ALL_%s.png' % variable,
+    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_ALL_%s_E3SMB.png' % variable,
                 dpi=300)
     
 elif variable == 'T700':
@@ -253,7 +253,7 @@ elif variable == 'T700':
     plt.text(0,3.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
-    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_ALL_%s.png' % variable,
+    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_ALL_%s_E3SMB.png' % variable,
                 dpi=300)
  
 elif variable == 'T500':
@@ -291,7 +291,7 @@ elif variable == 'T500':
     plt.text(0,3.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
-    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_ALL_%s.png' % variable,
+    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_ALL_%s_E3SMB.png' % variable,
                 dpi=300)
     
 elif variable == 'T2M':
@@ -331,6 +331,6 @@ elif variable == 'T2M':
     plt.text(0,3.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
             color='k')
     
-    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_ALL_%s.png' % variable,
+    plt.savefig(directoryfigure + 'SHI_EmergentConstraints_ALL_%s_E3SMB.png' % variable,
                 dpi=300)
 
