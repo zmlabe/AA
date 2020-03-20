@@ -13,6 +13,7 @@ def SHI(simu,period):
     import read_SIT_E3SM as E3SIT
     import read_SIC_E3SM as E3SIC
     import read_OldIceExperi as OLD
+    import read_LongCoupled as LC
     
     ### Select variable
     varia = 'SLP'
@@ -61,6 +62,10 @@ def SHI(simu,period):
     elif simu == 'OLD':
         lat,lon,lev,future = OLD.readOldIceExperi(varia,'FICT',level)
         lat,lon,lev,historical = OLD.readOldIceExperi(varia,'HIT',level)
+    ############################################################################### 
+    elif simu == 'LONG':
+        lat,lon,lev,future = LC.readLong(varia,'Long_Fu',level)
+        lat,lon,lev,historical = LC.readLong(varia,'Long_Pd',level)
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
