@@ -116,7 +116,7 @@ def readLong(varid,timeperiod,level):
         print('Completed: Changed units (K to C)!')
     elif varid == 'SWE':
         var = var*1000. # Meters to Millimeters 
-        print('Completed: Changed units (m to mm)!')
+        print('Completed: Changed units (m to mm)!')        
         
     print('Completed: Read members 1-101!')
 
@@ -128,5 +128,5 @@ def readLong(varid,timeperiod,level):
 ### Test functions - do not use!
 #import numpy as np
 #import matplotlib.pyplot as plt
-#lat,lon,lev,var1 = readLong('THICK','Long_Fu','surface')
-#lat,lon,lev,var = readLong('THICK','Long_Pd','surface')
+#lat,lon,lev,var1 = readLong('SLP','Long_Fu','surface')
+#lat,lon,lev,var = readLong('SLP','Long_Pd','surface')

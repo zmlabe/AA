@@ -1,5 +1,5 @@
 """
-Functions read in monthly data from the 2 AMIP experiments (AMIP-AA or AMIP-HL). 
+Functions read in monthly data from the 6 AMIP experiments. 
 Data is available over the 1979-2016 period (38 years) and sorted by month (12). 
 The AMIP simulations use SC-WACCM4 with historical forcings and RCP 4.5. 
 The experiment with all forcings is called AMQS. Note that the first year 
@@ -8,23 +8,23 @@ The experiment with all forcings is called AMQS. Note that the first year
 Notes
 -----
     Author : Zachary Labe
-    Date   : 24 March 2020
+    Date   : 25 March 2020
     
 Usage
 -----
-    [1] readAMIPAA(variable,experiment,level,detrend,sliceeq)
+    [1] readAMIP6(variable,experiment,level,detrend,sliceeq)
 """
 
-def readAMIPAA(variableq,experiment,level,detrend,sliceeq,period):
+def readAMIP6(variableq,experiment,level,detrend,sliceeq,period):
     """
-    Function reads monthly data from all 1 AMIP experiment
+    Function reads monthly data from all 6 AMIP experiment
 
     Parameters
     ----------
     variableq : string
         variable name to read
     experiment : string
-        experiment name (AMIP-AA or AMIP-HL)
+        experiment name (CSST, CSIC, AMIP, AMS, AMQ, AMQS)
     level : string
         Height of variable (surface or profile)
     detrend : binary
@@ -50,9 +50,9 @@ def readAMIPAA(variableq,experiment,level,detrend,sliceeq,period):
 
     Usage
     -----
-    lat,lon,time,lev,var = readDataM(variableq,experiment,level,detrend)
+    lat,lon,time,lev,var = readAMIP6(variableq,experiment,level,detrend)
     """
-    print('\n>>> Using readAMIPAA function! \n')
+    print('\n>>> Using readAMIP6 function! \n')
     ###########################################################################
     ###########################################################################
     ###########################################################################
@@ -68,19 +68,12 @@ def readAMIPAA(variableq,experiment,level,detrend,sliceeq,period):
     years = np.arange(1979,2016+1,1)
     
     ### Directory for experiments (remote server - Seley)
-    directorydata = '/seley/ypeings/simu/%s/' % experiment
+    directorydata = '/seley/zlabe/simu/'
     
 
     ###########################################################################
     ###########################################################################        
-    if any([variableq=='T700',variableq=='T500']):
-        variable = 'TEMP'
-        level = 'profile'
-    elif variableq == 'U700':
-        variable = 'U'
-        level = 'profile'
-    else:
-        variable = variableq
+    variable = variableq
     
     ###########################################################################
     ###########################################################################
@@ -210,20 +203,6 @@ def readAMIPAA(variableq,experiment,level,detrend,sliceeq,period):
     ### Save computer memory
     del varq
     
-    ### Check for 4D field
-    if variableq == 'T700':
-        levq = np.where(lev == 700)[0]
-        var = var[:,:,:,levq,:,:].squeeze()
-        level = 'surface'
-    elif variableq == 'T500':
-        levq = np.where(lev == 500)[0]
-        var = var[:,:,:,levq,:,:].squeeze()
-        level = 'surface'
-    elif variableq == 'U700':
-        levq = np.where(lev == 700)[0]
-        var = var[:,:,:,levq,:,:].squeeze()
-        level = 'surface'
-    
     ###########################################################################
     ###########################################################################
     ###########################################################################
@@ -269,20 +248,20 @@ def readAMIPAA(variableq,experiment,level,detrend,sliceeq,period):
                 varm[j,:,:,:] = UT.calcDecJanFeb(var[j,:,:,:,:],var[j,:,:,:,:],
                                                     lat,lon,'surface',1)
     
-    print('\n>>> Completed: Finished readAMIPAA function!')
+    print('\n>>> Completed: Finished readAMIP6 function!')
     return lat,lon,time,lev,varm
         
 ### Test functions -- no need to use    
 #import numpy as np
 #import matplotlib.pyplot as plt
 #import scipy.stats as sts
-#variable = 'T700'
-#experiment = 'AMIP-HL'
+#variable = 'THICK'
+#experiment = 'AMIP'
 #level = 'surface'
 #detrend = False
 #sliceeq = True
 #period = 'DJF'
-#lat,lon,time,lev,var = readAMIPAA(variable,experiment,level,detrend,sliceeq,period)
+#lat,lon,time,lev,var = readAMIP6(variable,experiment,level,detrend,sliceeq,period)
         
         
         

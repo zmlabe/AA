@@ -1,9 +1,11 @@
 """
-Script plots seasonal cycle of air temperature
+Script plots relationship between vertical warming in modeled data sets for
+the coupled PD experiments
+
 Notes
 -----
     Author : Zachary Labe
-    Date   : 24 February 2020
+    Date   : 26 March 2020
 """
 
 ### Import modules
@@ -24,7 +26,7 @@ import read_OldIceExperi as OLD
 import read_LongCoupled as LC
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/SeasonalCycle/'
+directoryfigure = '/home/zlabe/Desktop/AA/Vertical_Model/Coupled/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -33,30 +35,20 @@ currentdy = str(now.day)
 currentyr = str(now.year)
 currenttime = currentmn + '_' + currentdy + '_' + currentyr
 titletime = currentmn + '/' + currentdy + '/' + currentyr
-print('\n' '----Plotting Seasonal Cycle of Temperature %s----' % titletime)
+print('\n' '----Plotting Vertical Warming for Coupled- %s----' % titletime)
 
 ### Add parameters
 datareader = True
 latpolar = 65.
-variable = 'THICK'
-period = 'timemonth' 
-level = 'surface'
-runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
-            r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
-runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC']
-monthstext = [r'OCT',r'NOV',r'DEC',r'JAN',r'FEB',r'MAR']
-
+variable = 'TEMP'
+period = 'JFM' 
+level = 'profile'
 runnames = [r'AA-2060',r'AA-2090',r'L-Coupled',
             r'S-Coupled',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
 runnamesdata = ['AA-2060','AA-2090','LONG','coupled','SIT','SIC_Pd']
 
-def readData(simu,period,vari,level,latpolar):
-    if vari == 'T700' or vari == 'T500':
-        varia = 'TEMP'
-        level = 'profile'
-    else:
-        varia = vari
-    
+### Function to read in data
+def readData(simu,period,varia,level):
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
@@ -109,16 +101,6 @@ def readData(simu,period,vari,level,latpolar):
     ############################################################################### 
     ### Calculate number of ensembles
     nens = np.shape(historical)[0]
-    
-    ### Check for 4D field
-    if vari == 'T700':
-        levq = np.where(lev == 700)[0]
-        future = future[:,:,levq,:,:].squeeze()
-        historical = historical[:,:,levq,:,:].squeeze()
-    elif vari == 'T500':
-        levq = np.where(lev == 500)[0]
-        future = future[:,:,levq,:,:].squeeze()
-        historical = historical[:,:,levq,:,:].squeeze()
 
     ### Check for missing data [ensembles,months,lat,lon]
     future[np.where(future <= -1e10)] = np.nan
@@ -176,27 +158,12 @@ def readData(simu,period,vari,level,latpolar):
         print('Calculating over %s months!' % period)
         futurem = np.nanmean(future[:,2:4],axis=1)
         historicalm = np.nanmean(historical[:,2:4],axis=1)
-    elif period == 'annual':
-        print('Calculating over %s months!' % period)
-        futurem = np.nanmean(future,axis=1)
-        historicalm = np.nanmean(historical,axis=1)
-    elif period == 'NONE':
-        print('Calculating over %s months!' % period)
-        futurem = future
-        historicalm = historical
-    elif period == 'timemonth':
-        print('Calculating over O,N,D,J,F,M months!')
-        futurem = np.append(future[:,-3:,:,:],future[:,:3,:,:],axis=1)
-        historicalm = np.append(historical[:,-3:,:,:],historical[:,:3,:,:],axis=1)
     else:
         print(ValueError('Selected wrong month period!'))
 
     ###########################################################################
     ###########################################################################
     ###########################################################################
-    ### Calculate polar cap
-    lon2,lat2 = np.meshgrid(lon,lat)
-    
     ### Calculate zonal means
     futuremz = np.nanmean(futurem,axis=3)
     historicalmz = np.nanmean(historicalm,axis=3)
@@ -216,12 +183,12 @@ def readData(simu,period,vari,level,latpolar):
     return lat,lon,lev,anommean,nens,pruns,climo
 
 ### Call data
-lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData(runnamesdata[0],period,variable,level,latpolar)
-lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData(runnamesdata[1],period,variable,level,latpolar)
-lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData(runnamesdata[2],period,variable,level,latpolar)
-lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData(runnamesdata[3],period,variable,level,latpolar)
-lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData(runnamesdata[4],period,variable,level,latpolar)
-lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData(runnamesdata[5],period,variable,level,latpolar)
+lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData(runnamesdata[0],period,variable,level)
+lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData(runnamesdata[1],period,variable,level)
+lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData(runnamesdata[2],period,variable,level)
+lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData(runnamesdata[3],period,variable,level)
+lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData(runnamesdata[4],period,variable,level)
+lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData(runnamesdata[5],period,variable,level)
 
 ### Chunk data
 dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
@@ -253,42 +220,13 @@ def adjust_spines(ax, spines):
         ax.xaxis.set_ticks([]) 
         
 ### Set limits for contours and colorbars
-if variable == 'T2M':
-    limit = np.arange(-10,10.1,1)
-    limitc = np.arange(-45,46,5)
-    barlim = np.arange(-10,11,5)
+if variable == 'TEMP':
+    limit = np.arange(-3,3.01,0.25)
+    barlim = np.arange(-3,4,1)
     cmap = cmocean.cm.balance
-    label = r'\textbf{%s [$\bf{^{\circ}}$C]}' % variable
-    zscale = np.arange(-90,91,15)
-    time = np.arange(0,6,1)
-    latq,timeq = np.meshgrid(lat,time)
-elif variable == 'T500':
-    limit = np.arange(-5,5.1,0.5)
-    limitc = np.arange(-90,91,5)
-    barlim = np.arange(-5,6,5)
-    cmap = cmocean.cm.balance
-    label = r'\textbf{%s [$\bf{^{\circ}}$C]}' % variable
-    zscale = np.arange(-90,91,15)
-    time = np.arange(0,6,1)
-    latq,timeq = np.meshgrid(lat,time)
-elif variable == 'T700':
-    limit = np.arange(-5,5.1,0.5)
-    limitc = np.arange(-90,91,5)
-    barlim = np.arange(-5,6,5)
-    cmap = cmocean.cm.balance
-    label = r'\textbf{%s [$\bf{^{\circ}}$C]}' % variable
-    zscale = np.arange(-90,91,15)
-    time = np.arange(0,6,1)
-    latq,timeq = np.meshgrid(lat,time)
-elif variable == 'THICK':
-    limit = np.arange(-50,50.1,5)
-    limitc = np.arange(-4900,6000,100)
-    barlim = np.arange(-50,60,50)
-    cmap = cmocean.cm.balance
-    label = r'\textbf{%s [m]}' % variable
-    zscale = np.arange(-90,91,15)
-    time = np.arange(0,6,1)
-    latq,timeq = np.meshgrid(lat,time)
+    label = r'\textbf{$^{\circ}$C}'
+    zscale = np.array([1000,925,850,700,500,300,200])
+    latq,levq = np.meshgrid(lat,lev)
         
 fig = plt.figure()
 for i in range(len(runnames)):
@@ -318,7 +256,7 @@ for i in range(len(runnames)):
                     width=2,color='dimgrey')
         plt.gca().axes.get_yaxis().set_visible(True)
         plt.gca().axes.get_xaxis().set_visible(False)
-        plt.ylabel(r'\textbf{Latitude [$\bf{^{\circ}}$]}',color='k',fontsize=7)
+        plt.ylabel(r'\textbf{Pressure [hPa]}',color='k',fontsize=7)
     elif i == 3:
         ax1.tick_params(axis='x',direction='out',which='major',pad=3,
                     width=2,color='dimgrey')   
@@ -326,7 +264,7 @@ for i in range(len(runnames)):
                     width=2,color='dimgrey')
         plt.gca().axes.get_xaxis().set_visible(True)
         plt.gca().axes.get_yaxis().set_visible(True)
-        plt.ylabel(r'\textbf{Latitude [$\bf{^{\circ}}$]}',color='k',fontsize=7)
+        plt.ylabel(r'\textbf{Pressure [hPa]}',color='k',fontsize=7)
     elif i == 4 or i == 5:
         ax1.tick_params(axis='x',direction='out',which='major',pad=3,
                     width=2,color='dimgrey')   
@@ -341,23 +279,43 @@ for i in range(len(runnames)):
     ax1.xaxis.set_ticks_position('bottom')
     ax1.yaxis.set_ticks_position('left')
     
-    ### Plot contours
-    cs = plt.contourf(timeq,latq,varnomask,limit,extend='both')
-    cs1 = plt.contour(timeq,latq,clim,limitc,colors='dimgrey',
-                      linewidths=0.3)
-    cs.set_cmap(cmap)
+    ### Add levels
+    plt.axhline(lev[1],linewidth=0.6,linestyle='--',dashes=(1,0.5),
+                color='k')
+    plt.axhline(lev[2],linewidth=0.6,linestyle='--',dashes=(1,0.5),
+                color='k')
+    plt.axhline(lev[3],linewidth=0.6,linestyle='--',dashes=(1,0.5),
+                color='k')
+    plt.axhline(lev[5],linewidth=0.6,linestyle='--',dashes=(1,0.5),
+                color='k')
+    plt.axhline(lev[7],linewidth=0.6,linestyle='--',dashes=(1,0.5),
+                color='k')
     
-    plt.xticks(np.arange(0,6,1),monthstext,fontsize=4)
+    ### Plot contours
+    cs = plt.contourf(latq,levq,var,limit,extend='both')
+#    cs1 = plt.contour(latq,levq,clim,np.arange(-90,95,5),
+#                      linewidths=0.3,colors='k',extend='both')
+#    cs2 = plt.contourf(latq,levq,pvar,colors='None',
+#                   hatches=['//////'],linewidths=0.4)
+    cs.set_cmap(cmap) 
+    
+    plt.gca().invert_yaxis()
+    plt.yscale('log',nonposy='clip')
+    
+    plt.xticks(np.arange(-90,91,15),map(str,np.arange(-90,91,15)),fontsize=6)
     plt.yticks(zscale,map(str,zscale),ha='right',fontsize=6)
     
-    plt.xlim([0,5])
-    plt.ylim([0,90])
+    plt.xlim([45,90])
+    if variable == 'TEMP' or variable == 'GEOP':
+        plt.ylim([1000,200])
+    else:
+        plt.ylim([1000,10])
     plt.minorticks_off()
            
-    ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(0,90),xytext=(0.98,0.93),
+    ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(80,200),xytext=(0.98,0.93),
          textcoords='axes fraction',color='k',fontsize=8,
          rotation=0,ha='right',va='center')
-    ax1.annotate(r'\textbf{[%s]}' % en,xy=(0,90),xytext=(0.02,0.93),
+    ax1.annotate(r'\textbf{[%s]}' % en,xy=(80,200),xytext=(0.02,0.93),
          textcoords='axes fraction',color='dimgrey',fontsize=8,
          rotation=0,ha='left',va='center')
 
@@ -374,6 +332,7 @@ cbar.set_ticklabels(list(map(str,barlim)))
 cbar.ax.tick_params(axis='x', size=.001,labelsize=7)
 cbar.outline.set_edgecolor('dimgrey')
     
-plt.subplots_adjust(bottom=0.17,hspace=0.08,wspace=0.08)    
-plt.savefig(directoryfigure + 'MonthlyModels_%s_Oct-Apr_COUPLED.png' % variable,dpi=300)
+plt.subplots_adjust(bottom=0.17,hspace=0.08,wspace=0.08)  
+plt.savefig(directoryfigure + 'VerticalModels_TEMP_%s_Coupled.png' % period,
+        dpi=300)
 print('Completed: Script done!')
