@@ -42,12 +42,12 @@ print('\n' '----Plotting Composites of Coupled-PAMIP - %s----' % titletime)
 ### Add parameters
 su = [0,1,2,3,4,5]
 cps ='none'
-period = 'JFM'
+period = 'DJF'
 level = 'surface'
 varnames = ['SLP','Z500','Z50','T2M','T700','T500','THICK']
-runnames = [r'AA-2060',r'AA-2090',r'L-Coupled',
-            r'S-Coupled',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
-runnamesdata = ['AA-2060','AA-2090','LONG','coupled','SIT','SIC_Pd']
+runnames = [r'L-Coupled-Pd',r'S-Coupled-Pd',r'S-Coupled-Pi',
+            r'AA-2090',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
+runnamesdata = ['LONG','coupled_Pd','coupled_Pi','AA-2090','SIT','SIC_Pd']
 
 ### Function to read in data
 def readData(simu,period,vari,level,cps):
@@ -75,9 +75,13 @@ def readData(simu,period,vari,level,cps):
         lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,'none')
         lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     ############################################################################### 
-    elif simu == 'coupled':
+    elif simu == 'coupled_Pd':
         lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
-        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)        
+        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)      
+    ############################################################################### 
+    elif simu == 'coupled_Pi':
+        lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
+        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pi',level)  
     ###############################################################################        
     elif simu == 'SIT':
         lat,lon,lev,future = THICK.readSIT(varia,'SIT_Fu',level)

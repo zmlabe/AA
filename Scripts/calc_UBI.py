@@ -31,9 +31,13 @@ def UBI(simu,period,varia):
         lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,'none')
         lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     ############################################################################### 
-    elif simu == 'coupled':
+    elif simu == 'coupled_Pd':
         lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
-        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)        
+        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)      
+    ############################################################################### 
+    elif simu == 'coupled_Pi':
+        lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
+        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pi',level)         
     ###############################################################################        
     elif simu == 'SIT':
         lat,lon,lev,future = THICK.readSIT(varia,'SIT_Fu',level)

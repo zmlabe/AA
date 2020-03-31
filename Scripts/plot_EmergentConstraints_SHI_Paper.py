@@ -35,23 +35,23 @@ titletime = currentmn + '/' + currentdy + '/' + currentyr
 print('\n' '----Plotting Scatter of Warming-High (ALL)- %s----' % titletime)
 
 ### Add parameters
-datareader = True
+datareader = False
 latpolar = 65.
 variable = 'THICK'
 period = 'DJF' 
 level = 'surface'
-runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
-            r'S-Coupled',r'L-Coupled',r'$\Delta$SIT-Pd',
-            r'$\Delta$SIC-Pi',r'$\Delta$SIC-Pd',r'$\Delta$NET']
+runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
+            r'$\Delta$S-Coupled-Pd',r'$\Delta$S-Coupled-Pi',r'$\Delta$L-Coupled-Pd',r'$\Delta$WACCM-SIT-Pd',
+            r'$\Delta$WACCM-SIC-Pd',r'$\Delta$WACCM-SIC-Pi',r'$\Delta$NET']
 runnamesdata = ['AA-2030','AA-2060','AA-2090',
-                'coupled','LONG','SIT',
-                'SIC_Pi','SIC_Pd','OLD']
+                'coupled_Pd','coupled_Pi','LONG','SIT',
+                'SIC_Pd','SIC_Pi','OLD']
 
-runnames_E3SM = [r'E3SM-Pi',r'E3SM-Pd']
+runnames_E3SM = [r'$\Delta$E3SM-Pi',r'$\Delta$E3SM-Pd']
 runnamesdata_E3SM = ['E3SIC_Pi','E3SIC_Pd']
 
-runnames_AMIP = [r'AMIP-AA',r'AMIP-HL',r'AMIP']
-runnamesdata_AMIP = ['AMIP-AA','AMIP-HL',r'AMIP']
+runnames_AMIP = [r'AMIP-HL',r'AMIP']
+runnamesdata_AMIP = ['AMIP-HL','AMIP']
 
 ###############################################################################
 ###############################################################################
@@ -78,7 +78,7 @@ if datareader == True:
         high_E3SM.append(highq_E3SM)
     ###########################################################################
     ### Read in reanalysis data
-    years = np.arange(1979,2019+1,1)
+    years = np.arange(1979,2016+1,1)
     late,lone,leve,thicke = REAN.readOBS('ERA5',variable,level,period)
     late,lone,leve,slpe = REAN.readOBS('ERA5','SLP',level,period)
     she = REAN.calcOBS_SHI(slpe,late,lone)
@@ -177,8 +177,8 @@ newshreg = np.nanmean(sh_reg[-epochq:])
 diffshreg = newshreg - oldshreg
 
 ### Combine AMIP runs
-POLAMIP_ALL = [diffaa,diffhl,diffreg]
-SHIAMIP_ALL = [diffshaa,diffshhl,diffshreg]
+POLAMIP_ALL = [diffhl,diffreg]
+SHIAMIP_ALL = [diffshhl,diffshreg]
 
 ### Calculate T2M station-based data sets
 if variable == 'T2M':
@@ -248,7 +248,7 @@ if variable == 'THICK':
     plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k')
     
-    color = cmocean.cm.thermal(np.linspace(0.01,1,len(runnames)))
+    color = cmocean.cm.thermal(np.linspace(0.0,1,len(runnames)))
     for i,c in zip(range(len(runnames)),color):
         plt.scatter(meanPOL[i],meanSHI[i],color=c,s=42,
                     label=r'\textbf{%s}' % runnames[i],zorder=11,clip_on=False,
@@ -265,25 +265,27 @@ if variable == 'THICK':
                      bbox_to_anchor=(1,0.8),fancybox=True,ncol=1,frameon=False,
                      handlelength=0,handletextpad=1)
     
-    color = cmocean.cm.rain(np.linspace(0.25,0.8,len(runnames_AMIP)))
+    color = cmocean.cm.rain(np.linspace(0.4,0.8,len(runnames_AMIP)))
     for i,c in zip(range(len(runnames_AMIP)),color):
         plt.scatter(POLAMIP_ALL[i],SHIAMIP_ALL[i],color=c,s=42,
                     label=r'\textbf{%s}' % runnames_AMIP[i],zorder=11,
                     clip_on=False,marker='v',edgecolor='k',linewidth=0.5)   
-    leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
-                     bbox_to_anchor=(1,0.7),fancybox=True,ncol=1,frameon=False,
+    leg = plt.legend(shadow=False,fontsize=7,loc='upper center',
+                     bbox_to_anchor=(0.5,1.16),fancybox=True,ncol=5,frameon=False,
                      handlelength=0,handletextpad=1)
     
     plt.xticks(np.arange(0,100,10),map(str,np.arange(0,100,10)),size=8)
-    plt.yticks(np.arange(0,10,0.5),map(str,np.arange(0,10,0.5)),size=8)
+    plt.yticks(np.arange(-5,10,0.5),map(str,np.arange(-5,10,0.5)),size=8)
     plt.xlim([0,90])
-    plt.ylim([0,4])
+    plt.ylim([-0.5,4])
     
     plt.xlabel(r'\textbf{$\bf{\Delta}$1000-500 Thickness [m]}',
                          color='k',size=11,labelpad=5)
     plt.ylabel(r'\textbf{$\bf{\Delta}$Siberian High Index [hPa]}',
                          color='k',size=11,labelpad=5)
-    plt.text(91,3.9,r'\textbf{R$\bf{^{2}}$=%s' % np.round(r_value**2,2),
+    plt.text(91,-0.32,r'\textbf{R$\bf{^{2}}$ = %s' % np.round(r_value**2,2),
+            color='k',ha='right')
+    plt.text(91,-0.5,r'\textbf{\textit{P}$\bf{<}$0.001}' % np.round(r_value**2,2),
             color='k',ha='right')
     
     plt.savefig(directoryfigure + 'SHI_EmergentConstraints_v1_%s.png' % variable,
