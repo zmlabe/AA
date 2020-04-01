@@ -33,18 +33,18 @@ titletime = currentmn + '/' + currentdy + '/' + currentyr
 print('\n' '----Plotting Vertical Warming- %s----' % titletime)
 
 ### Add parameters
-datareader = True
+datareader = False
 latpolar = 65.
 cps = 'none'
 variable = 'TEMP'
-period = 'FM' 
+period = 'DJF' 
 level = 'profile'
 if cps == 'none':
-    runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
-                r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
+    runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
+            r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
 elif cps == 'yes':
-    runnames = [r'AA-2030',r'AA-2060',r'AA-2090-cps',
-            r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
+    runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090-cps',
+            r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
 runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC']
 
 ### Function to read in data
@@ -160,18 +160,18 @@ def readData(simu,period,varia,level,cps):
     return lat,lon,lev,anommean,nens,pruns,climo
 
 ### Call data
-lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,cps)
-lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,cps)
-lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,cps)
-lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level,cps)
-lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level,cps)
-lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level,cps)
-
-### Chunk data
-dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
-nensall = [nensAA30,nensAA60,nensAA90,nensCOUP,nensTHIC,nensCONC]
-pall =    [prunsAA30,prunsAA60,prunsAA90,prunsCOUP,prunsTHIC,prunsCONC]
-climoall =[climoAA30,climoAA60,climoAA90,climoCOUP,climoTHIC,climoCONC]
+#lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,cps)
+#lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,cps)
+#lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,cps)
+#lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level,cps)
+#lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level,cps)
+#lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level,cps)
+#
+#### Chunk data
+#dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
+#nensall = [nensAA30,nensAA60,nensAA90,nensCOUP,nensTHIC,nensCONC]
+#pall =    [prunsAA30,prunsAA60,prunsAA90,prunsCOUP,prunsTHIC,prunsCONC]
+#climoall =[climoAA30,climoAA60,climoAA90,climoCOUP,climoTHIC,climoCONC]
 
 ###########################################################################
 ###########################################################################
@@ -252,6 +252,9 @@ for i in range(len(runnames)):
             width=0,color='w')
         plt.gca().axes.get_yaxis().set_visible(False)
         plt.gca().axes.get_xaxis().set_visible(False)
+        
+    if i == 3 or i == 5:
+        plt.xlabel(r'\textbf{Latitude [$\bf{^{\circ}}$N]}',color='k',fontsize=7)
 
     ax1.xaxis.set_ticks_position('bottom')
     ax1.yaxis.set_ticks_position('left')
@@ -306,7 +309,7 @@ cbar.set_label(label,fontsize=11,color='dimgrey',labelpad=1.4)
 
 cbar.set_ticks(barlim)
 cbar.set_ticklabels(list(map(str,barlim)))
-cbar.ax.tick_params(axis='x', size=.001,labelsize=7)
+cbar.ax.tick_params(axis='x', size=.001,labelsize=6)
 cbar.outline.set_edgecolor('dimgrey')
     
 plt.subplots_adjust(bottom=0.17,hspace=0.08,wspace=0.08)  

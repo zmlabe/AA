@@ -22,6 +22,10 @@ import read_ExpMonthly as NUDG
 import read_ShortCoupled as COUP
 import read_SIT as THICK
 import read_SIC as CONC
+import read_SIT_E3SM as E3SIT
+import read_SIC_E3SM as E3SIC
+import read_OldIceExperi as OLD
+import read_LongCoupled as LC
 
 ### Define directories
 directoryfigure = '/home/zlabe/Desktop/AA/Seasons/'
@@ -37,14 +41,15 @@ print('\n' '----Plotting Composites of Nudging-PAMIP - %s----' % titletime)
 
 ### Add parameters
 su = [0,1,2,3,4,5]
-period = 'FM'
+period = 'DJF'
 cps = 'none' 
 level = 'surface'
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK','RNET']
+varnames = ['T2M']
 if cps == 'none':
-    runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
-                r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
+    runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
+                r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
 elif cps == 'yes':
     runnames = [r'AA-2030',r'AA-2060',r'AA-2090-cps',
             r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
@@ -72,20 +77,47 @@ def readData(simu,period,vari,level,cps):
         lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level,'none')
         lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2090':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,cps)
-        lat,lon,lev,historical = CONT.readControl(varia,level,cps)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     ############################################################################### 
-    elif simu == 'coupled':
+    elif simu == 'coupled_Pd':
         lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
-        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)        
+        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)      
+    ############################################################################### 
+    elif simu == 'coupled_Pi':
+        lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
+        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pi',level)  
     ###############################################################################        
     elif simu == 'SIT':
         lat,lon,lev,future = THICK.readSIT(varia,'SIT_Fu',level)
         lat,lon,lev,historical = THICK.readSIT(varia,'SIT_Pd',level)
     ############################################################################### 
-    elif simu == 'SIC':
+    elif simu == 'SIC_Pd':
         lat,lon,lev,future = CONC.readSIC(varia,'Fu',level)
         lat,lon,lev,historical = CONC.readSIC(varia,'Pd',level)
+    ############################################################################### 
+    elif simu == 'SIC_Pi':
+        lat,lon,lev,future = CONC.readSIC(varia,'Fu',level)
+        lat,lon,lev,historical = CONC.readSIC(varia,'Pi',level)
+    ############################################################################### 
+    elif simu == 'E3SIT':
+        lat,lon,lev,future = E3SIT.readE3SM_SIT(varia,'ESIT_Fu',level)
+        lat,lon,lev,historical = E3SIT.readE3SM_SIT(varia,'ESIT_Pd',level)
+    ############################################################################### 
+    elif simu == 'E3SIC_Pd':
+        lat,lon,lev,future = E3SIC.readE3SM_SIC(varia,'ESIC_Fu',level)
+        lat,lon,lev,historical = E3SIC.readE3SM_SIC(varia,'ESIC_Pd',level)
+    elif simu == 'E3SIC_Pi':
+        lat,lon,lev,future = E3SIC.readE3SM_SIC(varia,'ESIC_Fu',level)
+        lat,lon,lev,historical = E3SIC.readE3SM_SIC(varia,'ESIC_Pi',level)
+    ############################################################################### 
+    elif simu == 'OLD':
+        lat,lon,lev,future = OLD.readOldIceExperi(varia,'FICT',level)
+        lat,lon,lev,historical = OLD.readOldIceExperi(varia,'HIT',level)
+    ############################################################################### 
+    elif simu == 'LONG':
+        lat,lon,lev,future = LC.readLong(varia,'Long_Fu',level)
+        lat,lon,lev,historical = LC.readLong(varia,'Long_Pd',level)
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
@@ -202,9 +234,9 @@ for rr in range(len(varnames)):
     lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,varnames[rr],level,cps)
     lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,varnames[rr],level,cps)
     lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,varnames[rr],level,cps)
-    lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,varnames[rr],level,cps)
+    lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled_Pd',period,varnames[rr],level,cps)
     lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,varnames[rr],level,cps)
-    lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,varnames[rr],level,cps)
+    lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC_Pd',period,varnames[rr],level,cps)
     
     ### Chunk data
     dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
@@ -221,8 +253,8 @@ for rr in range(len(varnames)):
     
     ### Set limits for contours and colorbars
     if varnames[rr] == 'T2M':
-        limit = np.arange(-15,15.01,0.5)
-        barlim = np.arange(-15,16,5)
+        limit = np.arange(-10,10.01,0.5)
+        barlim = np.arange(-10,11,2)
         cmap = cmocean.cm.balance
         label = r'\textbf{$^{\circ}$C}'
     elif varnames[rr] == 'T700':
@@ -277,7 +309,7 @@ for rr in range(len(varnames)):
         label = r'\textbf{m/s}'
     elif varnames[rr] == 'SLP':
         limit = np.arange(-3,3.1,0.25)
-        barlim = np.arange(-3,4,3)
+        barlim = np.arange(-3,4,1)
         cmap = cmocean.cm.balance
         label = r'\textbf{hPa}'
     elif varnames[rr] == 'THICK':
@@ -338,8 +370,8 @@ for rr in range(len(varnames)):
             m.drawcoastlines(color='darkgray',linewidth=0.2)
                 
         cs.set_cmap(cmap) 
-        ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(0,0),xytext=(0.865,0.91),
-                     textcoords='axes fraction',color='k',fontsize=11,
+        ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(0,0),xytext=(0.865,0.90),
+                     textcoords='axes fraction',color='k',fontsize=6,
                      rotation=320,ha='center',va='center')
         ax1.annotate(r'\textbf{[%s]}' % nensall[i],xy=(0,0),xytext=(0.085,0.91),
                      textcoords='axes fraction',color='dimgrey',fontsize=8,
@@ -354,7 +386,7 @@ for rr in range(len(varnames)):
     
     cbar.set_ticks(barlim)
     cbar.set_ticklabels(list(map(str,barlim)))
-    cbar.ax.tick_params(axis='x', size=.01,labelsize=8)
+    cbar.ax.tick_params(axis='x', size=.01,labelsize=6)
     cbar.outline.set_edgecolor('dimgrey')
     
     plt.tight_layout()
