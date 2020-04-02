@@ -18,9 +18,13 @@ import read_ExpMonthly as NUDG
 import read_ShortCoupled as COUP
 import read_SIT as THICK
 import read_SIC as CONC
+import read_SIT_E3SM as E3SIT
+import read_SIC_E3SM as E3SIC
+import read_OldIceExperi as OLD
+import read_LongCoupled as LC
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/Vertical_Model/'
+directoryfigure = '/home/zlabe/Desktop/AA/SeasonalCycle/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -34,13 +38,14 @@ print('\n' '----Plotting Eddy-driven Jet %s----' % titletime)
 ### Add parameters
 datareader = True
 latpolar = 65.
-variable = 'U10'
+variable = 'U700'
 period = 'timemonth' 
 level = 'surface'
-runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
-            r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
+runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
+            r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
 runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC']
 monthstext = [r'OCT',r'NOV',r'DEC',r'JAN',r'FEB',r'MAR']
+letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
 
 ### Function to read in data
 def readData(simu,period,vari,level,latpolar):
@@ -54,26 +59,53 @@ def readData(simu,period,vari,level,latpolar):
     ############################################################################### 
     ############################################################################### 
     if simu == 'AA-2030':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2030',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2060':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2090':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level)
-        lat,lon,lev,historical = CONT.readControl(varia,level)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     ############################################################################### 
-    elif simu == 'coupled':
+    elif simu == 'coupled_Pd':
         lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
-        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)        
+        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)      
+    ############################################################################### 
+    elif simu == 'coupled_Pi':
+        lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
+        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pi',level)  
     ###############################################################################        
     elif simu == 'SIT':
         lat,lon,lev,future = THICK.readSIT(varia,'SIT_Fu',level)
         lat,lon,lev,historical = THICK.readSIT(varia,'SIT_Pd',level)
     ############################################################################### 
-    elif simu == 'SIC':
+    elif simu == 'SIC_Pd':
         lat,lon,lev,future = CONC.readSIC(varia,'Fu',level)
         lat,lon,lev,historical = CONC.readSIC(varia,'Pd',level)
+    ############################################################################### 
+    elif simu == 'SIC_Pi':
+        lat,lon,lev,future = CONC.readSIC(varia,'Fu',level)
+        lat,lon,lev,historical = CONC.readSIC(varia,'Pi',level)
+    ############################################################################### 
+    elif simu == 'E3SIT':
+        lat,lon,lev,future = E3SIT.readE3SM_SIT(varia,'ESIT_Fu',level)
+        lat,lon,lev,historical = E3SIT.readE3SM_SIT(varia,'ESIT_Pd',level)
+    ############################################################################### 
+    elif simu == 'E3SIC_Pd':
+        lat,lon,lev,future = E3SIC.readE3SM_SIC(varia,'ESIC_Fu',level)
+        lat,lon,lev,historical = E3SIC.readE3SM_SIC(varia,'ESIC_Pd',level)
+    elif simu == 'E3SIC_Pi':
+        lat,lon,lev,future = E3SIC.readE3SM_SIC(varia,'ESIC_Fu',level)
+        lat,lon,lev,historical = E3SIC.readE3SM_SIC(varia,'ESIC_Pi',level)
+    ############################################################################### 
+    elif simu == 'OLD':
+        lat,lon,lev,future = OLD.readOldIceExperi(varia,'FICT',level)
+        lat,lon,lev,historical = OLD.readOldIceExperi(varia,'HIT',level)
+    ############################################################################### 
+    elif simu == 'LONG':
+        lat,lon,lev,future = LC.readLong(varia,'Long_Fu',level)
+        lat,lon,lev,historical = LC.readLong(varia,'Long_Pd',level)
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
@@ -190,18 +222,18 @@ def readData(simu,period,vari,level,latpolar):
     return lat,lon,lev,anommean,nens,pruns,climo
 
 ### Call data
-lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,latpolar)
-lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,latpolar)
-lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,latpolar)
-lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level,latpolar)
-lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level,latpolar)
-lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level,latpolar)
-
-### Chunk data
-dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
-nensall = [nensAA30,nensAA60,nensAA90,nensCOUP,nensTHIC,nensCONC]
-pall =    [prunsAA30,prunsAA60,prunsAA90,prunsCOUP,prunsTHIC,prunsCONC]
-climoall =[climoAA30,climoAA60,climoAA90,climoCOUP,climoTHIC,climoCONC]
+#lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,latpolar)
+#lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,latpolar)
+#lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,latpolar)
+#lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled_Pd',period,variable,level,latpolar)
+#lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level,latpolar)
+#lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC_Pd',period,variable,level,latpolar)
+#
+#### Chunk data
+#dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
+#nensall = [nensAA30,nensAA60,nensAA90,nensCOUP,nensTHIC,nensCONC]
+#pall =    [prunsAA30,prunsAA60,prunsAA90,prunsCOUP,prunsTHIC,prunsCONC]
+#climoall =[climoAA30,climoAA60,climoAA90,climoCOUP,climoTHIC,climoCONC]
 
 ###########################################################################
 ###########################################################################
@@ -278,7 +310,7 @@ for i in range(len(runnames)):
                     width=2,color='dimgrey')
         plt.gca().axes.get_yaxis().set_visible(True)
         plt.gca().axes.get_xaxis().set_visible(False)
-        plt.ylabel(r'\textbf{Latitude [$\bf{^{\circ}}$]}',color='k',fontsize=7)
+        plt.ylabel(r'\textbf{Latitude [$\bf{^{\circ}}$N]}',color='k',fontsize=7)
     elif i == 3:
         ax1.tick_params(axis='x',direction='out',which='major',pad=3,
                     width=2,color='dimgrey')   
@@ -286,7 +318,7 @@ for i in range(len(runnames)):
                     width=2,color='dimgrey')
         plt.gca().axes.get_xaxis().set_visible(True)
         plt.gca().axes.get_yaxis().set_visible(True)
-        plt.ylabel(r'\textbf{Latitude [$\bf{^{\circ}}$]}',color='k',fontsize=7)
+        plt.ylabel(r'\textbf{Latitude [$\bf{^{\circ}}$N]}',color='k',fontsize=7)
     elif i == 4 or i == 5:
         ax1.tick_params(axis='x',direction='out',which='major',pad=3,
                     width=2,color='dimgrey')   
@@ -304,7 +336,7 @@ for i in range(len(runnames)):
     ### Plot contours
     cs = plt.contourf(timeq,latq,var,limit,extend='both')
     cs1 = plt.contour(timeq,latq,clim,limitc,colors='dimgrey',
-                      linewidths=0.3)
+                      linewidths=1)
     cs2 = plt.contourf(timeq,latq,pvar,colors='None',
                    hatches=['//////'],linewidths=0.4)
     cs.set_cmap(cmap)
@@ -319,7 +351,10 @@ for i in range(len(runnames)):
     ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(0,90),xytext=(0.98,0.93),
          textcoords='axes fraction',color='k',fontsize=8,
          rotation=0,ha='right',va='center')
-    ax1.annotate(r'\textbf{[%s]}' % en,xy=(0,90),xytext=(0.02,0.93),
+    ax1.annotate(r'\textbf{[%s]}' % letters[i],xy=(0,90),xytext=(0.02,0.93),
+         textcoords='axes fraction',color='k',fontsize=8,
+         rotation=0,ha='left',va='center')
+    ax1.annotate(r'\textbf{[%s]}' % en,xy=(0,90),xytext=(0.02,0.07),
          textcoords='axes fraction',color='dimgrey',fontsize=8,
          rotation=0,ha='left',va='center')
 

@@ -33,6 +33,7 @@ datareader = True
 latpolar = 65.
 epochq = 10
 variable = 'TEMP'
+letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
 period = 'DJF' 
 level = 'profile'
 dataERA = 'ERA5'
@@ -227,6 +228,10 @@ cs = plt.contourf(timeqe,levqe,diffe,limit,extend='both')
 cs2 = plt.contourf(timeqe,levqe,prunse,colors='None',
                hatches=['//////'],linewidths=0.4)
 
+ax1.annotate(r'\textbf{[%s]}' % letters[0],xy=(90,200),xytext=(0.02,0.96),
+    textcoords='axes fraction',color='k',fontsize=8,
+    rotation=0,ha='left',va='center')
+
 plt.ylabel(r'\textbf{Pressure [hPa]}',color='k',fontsize=9)
 plt.xlabel(r'\textbf{Latitude [$\bf{^{\circ}}$N]}',color='k',fontsize=9)
 plt.title(r'\textbf{%s}' % datatitle,color='k',fontsize=11)
@@ -293,6 +298,10 @@ plt.yticks(zscale,map(str,zscale),ha='right',fontsize=6)
 plt.xlim([45,90])
 plt.minorticks_off()
 plt.gca().invert_yaxis()
+
+ax1.annotate(r'\textbf{[%s]}' % letters[1],xy=(90,200),xytext=(0.02,0.96),
+    textcoords='axes fraction',color='k',fontsize=8,
+    rotation=0,ha='left',va='center')
            
 cs.set_cmap(cmocean.cm.balance)
 

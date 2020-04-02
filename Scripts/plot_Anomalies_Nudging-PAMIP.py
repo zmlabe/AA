@@ -44,9 +44,10 @@ su = [0,1,2,3,4,5]
 period = 'DJF'
 cps = 'none' 
 level = 'surface'
+letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK','RNET']
-varnames = ['T2M']
+varnames = ['Z50','T2M','SLP']
 if cps == 'none':
     runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
                 r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
@@ -77,8 +78,8 @@ def readData(simu,period,vari,level,cps):
         lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level,'none')
         lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2090':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,'none')
-        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,cps)
+        lat,lon,lev,historical = CONT.readControl(varia,level,cps)
     ############################################################################### 
     elif simu == 'coupled_Pd':
         lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
@@ -273,10 +274,10 @@ for rr in range(len(varnames)):
         cmap = cmocean.cm.balance
         label = r'\textbf{m}'
     elif varnames[rr] == 'Z50':
-        limit = np.arange(-50,50.1,1)
+        limit = np.arange(-50,50.1,5)
         barlim = np.arange(-50,51,25)
         cmap = cmocean.cm.balance
-        label = r'\textbf{m}'
+        label = r'\textbf{Z50 [m]}'
     elif varnames[rr] == 'U200':
         limit = np.arange(-5,5.1,0.25)
         barlim = np.arange(-5,6,5)
@@ -373,8 +374,11 @@ for rr in range(len(varnames)):
         ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(0,0),xytext=(0.865,0.90),
                      textcoords='axes fraction',color='k',fontsize=6,
                      rotation=320,ha='center',va='center')
-        ax1.annotate(r'\textbf{[%s]}' % nensall[i],xy=(0,0),xytext=(0.085,0.91),
-                     textcoords='axes fraction',color='dimgrey',fontsize=8,
+        ax1.annotate(r'\textbf{[%s]}' % letters[i],xy=(0,0),xytext=(0.085,0.93),
+                     textcoords='axes fraction',color='k',fontsize=8,
+                     rotation=0,ha='center',va='center')
+        ax1.annotate(r'\textbf{[%s]}' % nensall[i],xy=(0,0),xytext=(0.98,0.93),
+                     textcoords='axes fraction',color='dimgrey',fontsize=6,
                      rotation=0,ha='center',va='center')
     
     ###########################################################################
