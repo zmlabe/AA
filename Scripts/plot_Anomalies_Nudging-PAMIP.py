@@ -47,7 +47,7 @@ level = 'surface'
 letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK','RNET']
-varnames = ['Z50','T2M','SLP']
+varnames = ['THICK']
 if cps == 'none':
     runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
                 r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
@@ -317,7 +317,7 @@ for rr in range(len(varnames)):
         limit = np.arange(-40,40.1,5)
         barlim = np.arange(-40,41,20)
         cmap = cmocean.cm.balance
-        label = r'\textbf{m}'
+        label = r'\textbf{THICK [m]}'
     elif varnames[rr] == 'SST':
         limit = np.arange(-1,1.01,0.05)
         barlim = np.arange(-1,2,1)
