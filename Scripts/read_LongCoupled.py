@@ -128,5 +128,5 @@ def readLong(varid,timeperiod,level):
 ### Test functions - do not use!
 #import numpy as np
 #import matplotlib.pyplot as plt
-#lat,lon,lev,var1 = readLong('SLP','Long_Fu','surface')
-#lat,lon,lev,var = readLong('SLP','Long_Pd','surface')
+#lat,lon,lev,var1 = readLong('SIC','Long_Fu','surface')
+#lat,lon,lev,var = readLong('SIC','Long_Pd','surface')

@@ -148,6 +148,9 @@ def PolarCap(simu,vari,level,latpolar,period):
         print('Calculating over %s months!' % period)
         futurem = np.nanmean(future[:,2:4,:,:],axis=1)
         historicalm = np.nanmean(historical[:,2:4,:,:],axis=1)
+    elif period == 'NONE':
+        futurem = future
+        historicalm = historical
     else:
         print(ValueError('Selected wrong month period!'))
 
@@ -161,13 +164,26 @@ def PolarCap(simu,vari,level,latpolar,period):
     lon2,lat2 = np.meshgrid(lon,lat)
     
     ### Calculate SHI
-    latq = np.where((lat >= latpolar))[0]
-    anomp = anom[:,latq,:]
-    lat2p = lat2[latq,:]
-    polarave = UT.calc_weightedAve(anomp,lat2p)
+    if period == 'NONE':
+        latq = np.where((lat >= latpolar))[0]
+        anomp = anom[:,:,latq,:]
+        lat2p = lat2[latq,:]
+        polarave = UT.calc_weightedAve(anomp,lat2p)
+    else:
+        latq = np.where((lat >= latpolar))[0]
+        anomp = anom[:,latq,:]
+        lat2p = lat2[latq,:]
+        polarave = UT.calc_weightedAve(anomp,lat2p)
     
     print('\n========Calculated Polar Cap Average========\n')
     return polarave
 
 ### Test functions (do not use!)
-#ave = PolarCap('SIC_Pd','THICK','surface',65,'JFM')
+#ave = PolarCap('SIC_Pd','SIC','surface',30,'NONE')
+
+#import matplotlib.pyplot as plt
+#import numpy as np
+#plt.figure(figsize=(11,4))
+#plt.title('Monthly SIC Anomalies')
+#plt.plot(ave.ravel())
+#plt.savefig('/home/zlabe/Desktop/' + 'monthly_SIC_anom.png',dpi=300)

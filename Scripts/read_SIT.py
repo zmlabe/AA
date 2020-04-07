@@ -61,7 +61,7 @@ def readSIT(varid,timeperiod,level):
         print('-----------USING SC-WACCM4 THICKNESS EXPERIMENTS (Present-Day)!-----------')
         
     ### Missing variables in other seley directory
-    if any([varid=='THICK',varid=='RNET']):
+    if any([varid=='THICK',varid=='RNET',varid=='SST']):
         directorydata = '/seley/zlabe/simu/' # this is different
         totaldirectory = directorydata + experi + '/monthly/'
         filename = totaldirectory + varid + '_1700-2000.nc'
