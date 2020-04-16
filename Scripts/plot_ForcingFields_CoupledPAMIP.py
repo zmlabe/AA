@@ -42,12 +42,12 @@ print('\n' '----Plotting Composites of Coupled-PAMIP Forcings - %s----' % titlet
 ### Add parameters
 su = [0,1,2,3,4,5]
 cps ='none'
-period = 'AMJ'
+period = 'DJF'
 level = 'surface'
 varnames = ['SST','SIC','T2M']
-runnames = [r'L-Coupled-Pd',r'S-Coupled-Pd',r'S-Coupled-Pi',
-            r'AA-2090',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
-runnamesdata = ['LONG','coupled_Pd','coupled_Pi','AA-2090','SIT','SIC_Pd']
+runnames = [r'$\Delta$L-Coupled-Pd',r'$\Delta$S-Coupled-Pd',r'$\Delta$S-Coupled-Pi',
+            r'$\Delta$E3SM-SIC-Pd',r'$\Delta$WACCM-SIT-Pd',r'$\Delta$WACCM-SIC-Pd']
+runnamesdata = ['LONG','coupled_Pd','coupled_Pi','E3SIC_Pd','SIT','SIC_Pd']
 
 ### Function to read in data
 def readData(simu,period,vari,level,cps):
@@ -343,7 +343,7 @@ for rr in range(len(varnames)):
         circle.set_clip_on(False)
         
         cs = m.contourf(x,y,var,limit,extend='both')
-        cs1 = m.contourf(x,y,pvar,colors='None',hatches=['......'])
+#        cs1 = m.contourf(x,y,pvar,colors='None',hatches=['......'])
         if varnames[rr] == 'Z50': # the interval is 250 m 
             cs2 = m.contour(x,y,clim,np.arange(21900,23500,250),
                             colors='k',linewidths=1.1,zorder=10)
@@ -355,7 +355,7 @@ for rr in range(len(varnames)):
                 
         cs.set_cmap(cmap) 
         ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(0,0),xytext=(0.865,0.91),
-                     textcoords='axes fraction',color='k',fontsize=9,
+                     textcoords='axes fraction',color='k',fontsize=5.5,
                      rotation=320,ha='center',va='center')
         ax1.annotate(r'\textbf{[%s]}' % nensall[i],xy=(0,0),xytext=(0.085,0.91),
                      textcoords='axes fraction',color='dimgrey',fontsize=8,

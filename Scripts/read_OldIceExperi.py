@@ -49,7 +49,8 @@ def readOldIceExperi(varid,experi,level):
     from netCDF4 import Dataset
     
     ### Directory 1 for ensemble members 1-100 (remote server - Surtsey)
-    directorydata1 = '/surtsey/zlabe/simu/'
+    #directorydata1 = '/surtsey/zlabe/simu/'
+    directorydata1 = '/home/zlabe/surt/simu/'
     
     ### Directory 2 for ensemble members 101-200 (mounted server - GreenPlanet)
     directorydata2 = '/home/zlabe/green/simu/'

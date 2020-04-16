@@ -1,29 +1,55 @@
-def PolarCap(simu,vari,level,latpolar,period):
-    """
-    Script calculates average over the polar cap (set latitude)
-    """
-    ### Import modules
-    import numpy as np
-    import calc_Utilities as UT
-    import read_CTLNQ as CONT
-    import read_ExpMonthly as NUDG
-    import read_ShortCoupled as COUP
-    import read_SIT as THICK
-    import read_SIC as CONC
-    import read_SIT_E3SM as E3SIT
-    import read_SIC_E3SM as E3SIC
-    import read_OldIceExperi as OLD
-    import read_LongCoupled as LC
-    
-    if any([vari=='T700',vari=='T500']):
-        varia = 'TEMP'
-        level = 'profile'
-    elif vari == 'U700':
-        varia = 'U'
-        level = 'profile'
-    else:
-        varia = vari
-    
+"""
+Script calculates the mean vertical temperature response over the polar
+cap for December-January-February for each model experiment. See text file.
+
+Notes
+-----
+    Author : Zachary Labe
+    Date   : 16 April 2020
+"""
+
+### Import modules
+import datetime
+import numpy as np
+import matplotlib.pyplot as plt
+import calc_Utilities as UT
+import scipy.stats as sts
+import read_CTLNQ as CONT
+import read_ExpMonthly as NUDG
+import read_ShortCoupled as COUP
+import read_SIT as THICK
+import read_SIC as CONC
+import read_SIT_E3SM as E3SIT
+import read_SIC_E3SM as E3SIC
+import read_OldIceExperi as OLD
+import read_LongCoupled as LC
+
+### Define directories
+directoryfigure = '/home/zlabe/Desktop/AA/Emergent/Paper_v1/'
+directorydata = '/home/zlabe/Documents/Research/AA/Data/'
+
+### Define time           
+now = datetime.datetime.now()
+currentmn = str(now.month)
+currentdy = str(now.day)
+currentyr = str(now.year)
+currenttime = currentmn + '_' + currentdy + '_' + currentyr
+titletime = currentmn + '/' + currentdy + '/' + currentyr
+print('\n' '----Plotting Scatter of Warming-High (ALL)- %s----' % titletime)
+
+### Add parameters
+datareader = False
+latpolar = 65.
+variable = 'TEMP'
+period = 'DJF' 
+level = 'surface'
+runnamesdata = ['AA-2030','AA-2060','AA-2090',
+                'coupled_Pd','coupled_Pi','LONG','SIT',
+                'SIC_Pd','SIC_Pi','OLD']
+runnamesdata_E3SM = ['E3SIC_Pi','E3SIC_Pd']
+runnamesdata_AMIP = ['AMIP-HL','AMIP']
+
+def PolarCapVert(simu,varia,level,latpolar,period,levelVert):
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
@@ -82,20 +108,6 @@ def PolarCap(simu,vari,level,latpolar,period):
     future[np.where(future <= -1e10)] = np.nan
     historical[np.where(historical <= -1e10)] = np.nan
     
-    ### Check for 4D field
-    if vari == 'T700':
-        levq = np.where(lev == 700)[0]
-        future = future[:,:,levq,:,:].squeeze()
-        historical = historical[:,:,levq,:,:].squeeze()
-    elif vari == 'T500':
-        levq = np.where(lev == 500)[0]
-        future = future[:,:,levq,:,:].squeeze()
-        historical = historical[:,:,levq,:,:].squeeze()
-    elif vari == 'U700':
-        levq = np.where(lev == 700)[0]
-        future = future[:,:,levq,:,:].squeeze()
-        historical = historical[:,:,levq,:,:].squeeze()
-    
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
@@ -111,9 +123,10 @@ def PolarCap(simu,vari,level,latpolar,period):
     elif period == 'DJF':
         print('Calculating over %s months!' % period)
         runs = [future,historical]
-        var_mo = np.empty((2,historical.shape[0]-1,historical.shape[2],historical.shape[3]))
+        var_mo = np.empty((2,historical.shape[0]-1,historical.shape[2],
+                           historical.shape[3],historical.shape[4]))
         for i in range(len(runs)):
-            var_mo[i,:,:,:] = UT.calcDecJanFeb(runs[i],runs[i],lat,lon,'surface',1) 
+            var_mo[i,:,:,:,:] = UT.calcDecJanFeb(runs[i],runs[i],lat,lon,level,17) 
         futurem = var_mo[0]
         historicalm = var_mo[1]
     elif period == 'JFM':
@@ -164,26 +177,48 @@ def PolarCap(simu,vari,level,latpolar,period):
     lon2,lat2 = np.meshgrid(lon,lat)
     
     ### Calculate SHI
-    if period == 'NONE':
-        latq = np.where((lat >= latpolar))[0]
-        anomp = anom[:,:,latq,:]
-        lat2p = lat2[latq,:]
-        polarave = UT.calc_weightedAve(anomp,lat2p)
-    else:
-        latq = np.where((lat >= latpolar))[0]
-        anomp = anom[:,latq,:]
-        lat2p = lat2[latq,:]
-        polarave = UT.calc_weightedAve(anomp,lat2p)
+    latq = np.where((lat >= latpolar))[0]
+    anomp = anom[:,:,latq,:]
+    lat2p = lat2[latq,:]
+    polarave = UT.calc_weightedAve(anomp,lat2p)
+    
+    ### Calculate ensemble mean
+    polaraveMean = np.nanmean(polarave,axis=0)
+    
+    ############################################################################### 
+    ############################################################################### 
+    ############################################################################### 
+    ### Calculate vertical levels and save file
+    levqq = np.where((lev >= levelVert))[0]
+    levvv = lev[levqq]
+    polaraveMeanvvv = polaraveMean[levqq]
+    
+    ### Save file
+    np.savetxt(directorydata + '%s_1000-%s_%s.txt' % (simu,levelVert,varia),
+               polaraveMeanvvv,delimiter=',',fmt='%.3f')
+    np.savetxt(directorydata + 'Levels_1000-%s_%s.txt' % (levelVert,varia),
+               levvv,delimiter=',',fmt='%.1f')
     
     print('\n========Calculated Polar Cap Average========\n')
-    return polarave
+    return polaraveMeanvvv,levvv
 
+###############################################################################
+###############################################################################
+###############################################################################
 ### Test functions (do not use!)
-ave = PolarCap('AA-2030','TEMP','profile',65,'DJF')
-
-#import matplotlib.pyplot as plt
-#import numpy as np
-#plt.figure(figsize=(11,4))
-#plt.title('Monthly SIC Anomalies')
-#plt.plot(ave.ravel())
-#plt.savefig('/home/zlabe/Desktop/' + 'monthly_SIC_anom.png',dpi=300)
+    
+#aveAA30,lev = PolarCapVert('AA-2030','TEMP','profile',65,'DJF',500)
+#aveAA60,lev = PolarCapVert('AA-2060','TEMP','profile',65,'DJF',500)
+#aveAA90,lev = PolarCapVert('AA-2090','TEMP','profile',65,'DJF',500)
+################################################################################
+#ave_coupPd,lev = PolarCapVert('coupled_Pd','TEMP','profile',65,'DJF',500)
+#ave_coupPi,lev = PolarCapVert('coupled_Pi','TEMP','profile',65,'DJF',500)
+################################################################################
+#ave_SIT,lev = PolarCapVert('SIT','TEMP','profile',65,'DJF',500)
+#ave_SICPd,lev = PolarCapVert('SIC_Pd','TEMP','profile',65,'DJF',500)
+#ave_SICPi,lev = PolarCapVert('SIC_Pi','TEMP','profile',65,'DJF',500)
+###############################################################################
+#ave_NET,lev = PolarCapVert('OLD','TEMP','profile',65,'DJF',500)
+###############################################################################
+#ave_ESICPd,lev = PolarCapVert('E3SIC_Pd','TEMP','profile',65,'DJF',500)
+#ave_ESICPi,lev = PolarCapVert('E3SIC_Pi','TEMP','profile',65,'DJF',500)
