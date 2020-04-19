@@ -477,20 +477,20 @@ def readAMIP6Profile(variableq,experiment,level,detrend,sliceeq,period,levelVert
 
         
 ### Test functions -- no need to use    
-import numpy as np
-import matplotlib.pyplot as plt
-import scipy.stats as sts
-variable = 'TEMP'
-experiment = 'AMIP'
-level = 'profile'
-detrend = False
-sliceeq = True
-period = 'DJF'
-levelVert = 500
-epoch = 10
-#lat,lon,time,lev,var = readAMIP6(variable,experiment,level,detrend,sliceeq,period)
-lat,lon,time,lev,diffa = readAMIP6Profile(variable,experiment,level,
-                                               detrend,sliceeq,period,levelVert,epoch)
+#import numpy as np
+#import matplotlib.pyplot as plt
+#import scipy.stats as sts
+#variable = 'TEMP'
+#experiment = 'AMIP'
+#level = 'profile'
+#detrend = False
+#sliceeq = True
+#period = 'DJF'
+#levelVert = 500
+#epoch = 10
+##lat,lon,time,lev,var = readAMIP6(variable,experiment,level,detrend,sliceeq,period)
+#lat,lon,time,lev,diffa = readAMIP6Profile(variable,experiment,level,
+#                                               detrend,sliceeq,period,levelVert,epoch)
         
         
         

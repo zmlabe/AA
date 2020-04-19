@@ -179,7 +179,7 @@ def PolarCap(simu,vari,level,latpolar,period):
     return polarave
 
 ### Test functions (do not use!)
-ave = PolarCap('AA-2030','TEMP','profile',65,'DJF')
+#ave = PolarCap('AA-2030','TEMP','profile',65,'DJF')
 
 #import matplotlib.pyplot as plt
 #import numpy as np

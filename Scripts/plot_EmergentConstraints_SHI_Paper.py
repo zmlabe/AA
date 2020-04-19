@@ -41,10 +41,10 @@ variable = 'THICK'
 period = 'DJF' 
 level = 'surface'
 runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
-            r'$\Delta$S-Coupled-Pd',r'$\Delta$S-Coupled-Pi',r'$\Delta$L-Coupled-Pd',r'$\Delta$WACCM-SIT-Pd',
+            r'$\Delta$S-Coupled-Pd',r'$\Delta$S-Coupled-Pi',r'$\Delta$WACCM-SIT-Pd',
             r'$\Delta$WACCM-SIC-Pd',r'$\Delta$WACCM-SIC-Pi',r'$\Delta$NET']
 runnamesdata = ['AA-2030','AA-2060','AA-2090',
-                'coupled_Pd','coupled_Pi','LONG','SIT',
+                'coupled_Pd','coupled_Pi','SIT',
                 'SIC_Pd','SIC_Pi','OLD']
 
 runnames_E3SM = [r'$\Delta$E3SM-Pi',r'$\Delta$E3SM-Pd']
@@ -285,7 +285,7 @@ if variable == 'THICK':
                          color='k',size=11,labelpad=5)
     plt.text(91,-0.32,r'\textbf{R$\bf{^{2}}$ = %s' % np.round(r_value**2,2),
             color='k',ha='right')
-    plt.text(91,-0.5,r'\textbf{\textit{P}$\bf{<}$0.001}' % np.round(r_value**2,2),
+    plt.text(91,-0.5,r'\textbf{\textit{P}$\bf{<}$0.001}',
             color='k',ha='right')
     
     plt.savefig(directoryfigure + 'SHI_EmergentConstraints_v1_%s.png' % variable,
