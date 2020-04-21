@@ -42,11 +42,11 @@ level = 'profile'
 letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
 if cps == 'none':
     runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
-            r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
-elif cps == 'yes':
-    runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090-cps',
-            r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
-runnamesdata = ['AA-2030','AA-2060','AA-2090','coupled','SIT','SIC']
+            r'$\Delta$SIC-Pd',r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd']
+#elif cps == 'yes':
+#    runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090-cps',
+#            r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
+runnamesdata = ['AA-2030','AA-2060','AA-2090','SIC','coupled','SIT']
 
 ### Function to read in data
 def readData(simu,period,varia,level,cps):
@@ -164,9 +164,9 @@ def readData(simu,period,varia,level,cps):
 lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,cps)
 lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,cps)
 lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,cps)
-lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled',period,variable,level,cps)
-lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,variable,level,cps)
-lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC',period,variable,level,cps)
+lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('SIC',period,variable,level,cps)
+lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('coupled',period,variable,level,cps)
+lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIT',period,variable,level,cps)
 
 ### Chunk data
 dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]

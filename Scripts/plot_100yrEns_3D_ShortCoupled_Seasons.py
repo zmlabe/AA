@@ -29,11 +29,13 @@ titletime = currentmn + '/' + currentdy + '/' + currentyr
 print('\n' '----Plotting Composites of Short Coupled 100ens - %s----' % titletime)
 
 ### Add parameters
-period = 'FM' 
+period = 'DJF' 
 level = 'surface'
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK','V925']
+varnames = ['Z500']
 runnames = [r'A',r'B',r'C']
+letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
 
 ### Function to read in data
 def readData(simu,period,vari,level):
@@ -201,7 +203,7 @@ for rr in range(len(varnames)):
         cmap = cmocean.cm.balance
         label = r'\textbf{$^{\circ}$C}'
     elif varnames[rr] == 'Z500':
-        limit = np.arange(-50,50.1,1)
+        limit = np.arange(-50,50.1,2)
         barlim = np.arange(-50,51,25)
         cmap = cmocean.cm.balance
         label = r'\textbf{m}'
@@ -298,12 +300,15 @@ for rr in range(len(varnames)):
             m.fillcontinents(color='dimgray')
                 
         cs.set_cmap(cmap) 
-        ax1.annotate(r'\textbf{[2.3-2.1] -- %s}' % runnames[i],xy=(0,0),xytext=(0.865,0.91),
-                     textcoords='axes fraction',color='k',fontsize=11,
+        ax1.annotate(r'\textbf{$\Delta$S-Coupled-Pd -- [%s]}' % runnames[i],xy=(0,0),xytext=(0.85,0.91),
+                     textcoords='axes fraction',color='k',fontsize=8,
                      rotation=320,ha='center',va='center')
-        ax1.annotate(r'\textbf{[%s]}' % nensall[i],xy=(0,0),xytext=(0.085,0.91),
-                     textcoords='axes fraction',color='dimgrey',fontsize=8,
+        ax1.annotate(r'\textbf{[%s]}' % letters[i],xy=(0,0),xytext=(0.085,0.93),
+                     textcoords='axes fraction',color='dimgrey',fontsize=15,
                      rotation=0,ha='center',va='center')
+#        ax1.annotate(r'\textbf{[%s]}' % nensall[i],xy=(0,0),xytext=(0.98,0.93),
+#                     textcoords='axes fraction',color='dimgrey',fontsize=6,
+#                     rotation=0,ha='center',va='center')
     
     ###########################################################################
     cbar_ax = fig.add_axes([0.293,0.2,0.4,0.03])             

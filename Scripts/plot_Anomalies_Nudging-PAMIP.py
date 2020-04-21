@@ -47,13 +47,13 @@ level = 'surface'
 letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK','RNET']
-varnames = ['THICK']
+varnames = ['Z50','T2M']
 if cps == 'none':
     runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
-                r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
-elif cps == 'yes':
-    runnames = [r'AA-2030',r'AA-2060',r'AA-2090-cps',
-            r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
+                r'$\Delta$SIC-Pd',r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd']
+#elif cps == 'yes':
+#    runnames = [r'AA-2030',r'AA-2060',r'AA-2090-cps',
+#            r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
 
 ### Function to read in data
 def readData(simu,period,vari,level,cps):
@@ -235,9 +235,9 @@ for rr in range(len(varnames)):
     lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,varnames[rr],level,cps)
     lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,varnames[rr],level,cps)
     lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,varnames[rr],level,cps)
-    lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('coupled_Pd',period,varnames[rr],level,cps)
-    lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('SIT',period,varnames[rr],level,cps)
-    lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIC_Pd',period,varnames[rr],level,cps)
+    lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('SIC_Pd',period,varnames[rr],level,cps)
+    lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('coupled_Pd',period,varnames[rr],level,cps)
+    lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIT',period,varnames[rr],level,cps)
     
     ### Chunk data
     dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
