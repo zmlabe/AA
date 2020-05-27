@@ -42,7 +42,7 @@ level = 'profile'
 letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
 if cps == 'none':
     runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
-            r'$\Delta$SIC-Pd',r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd']
+            r'$\Delta$WACCM-SIC-Pd',r'$\Delta$S-Coupled-Pd',r'$\Delta$WACCM-SIT-Pd']
 #elif cps == 'yes':
 #    runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090-cps',
 #            r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd',r'$\Delta$SIC-Pd']
@@ -161,18 +161,18 @@ def readData(simu,period,varia,level,cps):
     return lat,lon,lev,anommean,nens,pruns,climo
 
 ### Call data
-lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,cps)
-lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,cps)
-lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,cps)
-lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('SIC',period,variable,level,cps)
-lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('coupled',period,variable,level,cps)
-lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIT',period,variable,level,cps)
-
-### Chunk data
-dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
-nensall = [nensAA30,nensAA60,nensAA90,nensCOUP,nensTHIC,nensCONC]
-pall =    [prunsAA30,prunsAA60,prunsAA90,prunsCOUP,prunsTHIC,prunsCONC]
-climoall =[climoAA30,climoAA60,climoAA90,climoCOUP,climoTHIC,climoCONC]
+#lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,cps)
+#lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,cps)
+#lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,cps)
+#lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('SIC',period,variable,level,cps)
+#lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('coupled',period,variable,level,cps)
+#lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIT',period,variable,level,cps)
+#
+#### Chunk data
+#dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
+#nensall = [nensAA30,nensAA60,nensAA90,nensCOUP,nensTHIC,nensCONC]
+#pall =    [prunsAA30,prunsAA60,prunsAA90,prunsCOUP,prunsTHIC,prunsCONC]
+#climoall =[climoAA30,climoAA60,climoAA90,climoCOUP,climoTHIC,climoCONC]
 
 ###########################################################################
 ###########################################################################
@@ -271,6 +271,16 @@ for i in range(len(runnames)):
                 color='k')
     plt.axhline(lev[7],linewidth=0.6,linestyle='--',dashes=(1,0.5),
                 color='k')
+    
+    if i < 3:
+        plt.vlines(70,ymin=1000,ymax=600,linestyle='-',color='blue',
+                   linewidth=1.5)
+        plt.vlines(90,ymin=1000,ymax=600,linestyle='-',color='blue',
+                   linewidth=1.5,zorder=10)
+        plt.hlines(600,xmin=70,xmax=90,linestyle='-',color='blue',
+                   linewidth=1.5)
+        plt.hlines(1000,xmin=70,xmax=90,linestyle='-',color='blue',
+                   linewidth=1.5,zorder=11)
     
     ### Plot contours
     cs = plt.contourf(latq,levq,var,limit,extend='both')

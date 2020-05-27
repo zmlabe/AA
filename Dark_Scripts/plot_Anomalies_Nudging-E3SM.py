@@ -1,11 +1,11 @@
 """
-Script plots anomalies for multiple SC-WACCM4 experiments from PAMIP and AA
+Script plots anomalies for multiple E3SM experiments from PAMIP and AA
 nudging from Peings et al. 2019, [GRL]
 
 Notes
 -----
     Author : Zachary Labe
-    Date   : 18 February 2020
+    Date   : 27 February 2020
 """
 
 ### Import modules
@@ -25,10 +25,9 @@ import read_SIC as CONC
 import read_SIT_E3SM as E3SIT
 import read_SIC_E3SM as E3SIC
 import read_OldIceExperi as OLD
-import read_LongCoupled as LC
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/Seasons/'
+directoryfigure = '/home/zlabe/Desktop/AA/Seasons/E3SM/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -37,27 +36,19 @@ currentdy = str(now.day)
 currentyr = str(now.year)
 currenttime = currentmn + '_' + currentdy + '_' + currentyr
 titletime = currentmn + '/' + currentdy + '/' + currentyr
-print('\n' '----Plotting Composites of Nudging-PAMIP - %s----' % titletime)
+print('\n' '----Plotting Composites of Nudging-E3SM - %s----' % titletime)
 
 ### Add parameters
 su = [0,1,2,3,4,5]
 period = 'DJF'
-cps = 'none' 
 level = 'surface'
-letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK','RNET']
-varnames = ['Z500','SLP','THICK','Z50','T2M']
-varnames = ['T2M']
-if cps == 'none':
-    runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
-                r'$\Delta$WACCM-SIC-Pd',r'$\Delta$S-Coupled-Pd',r'$\Delta$WACCM-SIT-Pd']
-#elif cps == 'yes':
-#    runnames = [r'AA-2030',r'AA-2060',r'AA-2090-cps',
-#            r'2.3--2.1',r'$\Delta$SIT',r'$\Delta$SIC']
+runnames = [r'AA-2030',r'AA-2060',r'AA-2090',
+            r'E3SM-SIT-Pd',r'E3SM-Pd',r'E3SM-Pi']
 
 ### Function to read in data
-def readData(simu,period,vari,level,cps):
+def readData(simu,period,vari,level):
     if any([vari=='T700',vari=='T500']):
         varia = 'TEMP'
         level = 'profile'
@@ -79,16 +70,12 @@ def readData(simu,period,vari,level,cps):
         lat,lon,lev,future = NUDG.readExperi(varia,'AA','2060',level,'none')
         lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     elif simu == 'AA-2090':
-        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,cps)
-        lat,lon,lev,historical = CONT.readControl(varia,level,cps)
+        lat,lon,lev,future = NUDG.readExperi(varia,'AA','2090',level,'none')
+        lat,lon,lev,historical = CONT.readControl(varia,level,'none')
     ############################################################################### 
-    elif simu == 'coupled_Pd':
+    elif simu == 'coupled':
         lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
-        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)      
-    ############################################################################### 
-    elif simu == 'coupled_Pi':
-        lat,lon,lev,future = COUP.readCOUPs(varia,'C_Fu',level)
-        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pi',level)  
+        lat,lon,lev,historical = COUP.readCOUPs(varia,'C_Pd',level)        
     ###############################################################################        
     elif simu == 'SIT':
         lat,lon,lev,future = THICK.readSIT(varia,'SIT_Fu',level)
@@ -116,10 +103,6 @@ def readData(simu,period,vari,level,cps):
     elif simu == 'OLD':
         lat,lon,lev,future = OLD.readOldIceExperi(varia,'FICT',level)
         lat,lon,lev,historical = OLD.readOldIceExperi(varia,'HIT',level)
-    ############################################################################### 
-    elif simu == 'LONG':
-        lat,lon,lev,future = LC.readLong(varia,'Long_Fu',level)
-        lat,lon,lev,historical = LC.readLong(varia,'Long_Pd',level)
     ############################################################################### 
     ############################################################################### 
     ############################################################################### 
@@ -233,12 +216,12 @@ def readData(simu,period,vari,level,cps):
 ############################################################################### 
 ### Call functions
 for rr in range(len(varnames)):
-    lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,varnames[rr],level,cps)
-    lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,varnames[rr],level,cps)
-    lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,varnames[rr],level,cps)
-    lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('SIC_Pd',period,varnames[rr],level,cps)
-    lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('coupled_Pd',period,varnames[rr],level,cps)
-    lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIT',period,varnames[rr],level,cps)
+    lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,varnames[rr],level)
+    lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,varnames[rr],level)
+    lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,varnames[rr],level)
+    lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('E3SIT',period,varnames[rr],level)
+    lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('E3SIC_Pd',period,varnames[rr],level)
+    lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('E3SIC_Pi',period,varnames[rr],level)
     
     ### Chunk data
     dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
@@ -255,8 +238,8 @@ for rr in range(len(varnames)):
     
     ### Set limits for contours and colorbars
     if varnames[rr] == 'T2M':
-        limit = np.arange(-10,10.01,0.5)
-        barlim = np.arange(-10,11,2)
+        limit = np.arange(-15,15.01,0.5)
+        barlim = np.arange(-15,16,5)
         cmap = cmocean.cm.balance
         label = r'\textbf{$^{\circ}$C}'
     elif varnames[rr] == 'T700':
@@ -270,15 +253,15 @@ for rr in range(len(varnames)):
         cmap = cmocean.cm.balance
         label = r'\textbf{$^{\circ}$C}'
     elif varnames[rr] == 'Z500':
-        limit = np.arange(-50,50.1,5)
+        limit = np.arange(-50,50.1,1)
         barlim = np.arange(-50,51,25)
         cmap = cmocean.cm.balance
         label = r'\textbf{m}'
     elif varnames[rr] == 'Z50':
-        limit = np.arange(-50,50.1,5)
+        limit = np.arange(-50,50.1,1)
         barlim = np.arange(-50,51,25)
         cmap = cmocean.cm.balance
-        label = r'\textbf{Z50 [m]}'
+        label = r'\textbf{m}'
     elif varnames[rr] == 'U200':
         limit = np.arange(-5,5.1,0.25)
         barlim = np.arange(-5,6,5)
@@ -311,14 +294,14 @@ for rr in range(len(varnames)):
         label = r'\textbf{m/s}'
     elif varnames[rr] == 'SLP':
         limit = np.arange(-3,3.1,0.25)
-        barlim = np.arange(-3,4,1)
+        barlim = np.arange(-3,4,3)
         cmap = cmocean.cm.balance
         label = r'\textbf{hPa}'
     elif varnames[rr] == 'THICK':
         limit = np.arange(-40,40.1,5)
         barlim = np.arange(-40,41,20)
         cmap = cmocean.cm.balance
-        label = r'\textbf{THICK [m]}'
+        label = r'\textbf{m}'
     elif varnames[rr] == 'SST':
         limit = np.arange(-1,1.01,0.05)
         barlim = np.arange(-1,2,1)
@@ -361,15 +344,10 @@ for rr in range(len(varnames)):
         circle.set_clip_on(False)
         
         cs = m.contourf(x,y,var,limit,extend='both')
-        cs1 = m.contourf(x,y,pvar,colors='None',hatches=['...'])
+        cs1 = m.contourf(x,y,pvar,colors='None',hatches=['.....'])
         if varnames[rr] == 'Z50': # the interval is 250 m 
             cs2 = m.contour(x,y,clim,np.arange(21900,23500,250),
                             colors='k',linewidths=1.1,zorder=10)
-        if varnames[rr] == 'T2M': 
-            if i < 3:
-                cs3 = m.contour(lon2d,lat2d,lat2d,np.arange(70,71,1),
-                                linewidths=1.5,colors='blue',
-                                linestyles='-',latlon=True,zorder=12)
                   
         m.drawcoastlines(color='dimgray',linewidth=0.7)
         if varnames[rr] == 'RNET':
@@ -377,14 +355,11 @@ for rr in range(len(varnames)):
             m.drawcoastlines(color='darkgray',linewidth=0.2)
                 
         cs.set_cmap(cmap) 
-        ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(0,0),xytext=(0.85,0.89),
-                     textcoords='axes fraction',color='k',fontsize=6,
-                     rotation=320,ha='center',va='center')
-        ax1.annotate(r'\textbf{[%s]}' % letters[i],xy=(0,0),xytext=(0.085,0.93),
+        ax1.annotate(r'\textbf{%s}' % runnames[i],xy=(0,0),xytext=(0.865,0.91),
                      textcoords='axes fraction',color='k',fontsize=8,
-                     rotation=0,ha='center',va='center')
-        ax1.annotate(r'\textbf{[%s]}' % nensall[i],xy=(0,0),xytext=(0.98,0.93),
-                     textcoords='axes fraction',color='dimgrey',fontsize=6,
+                     rotation=320,ha='center',va='center')
+        ax1.annotate(r'\textbf{[%s]}' % nensall[i],xy=(0,0),xytext=(0.085,0.91),
+                     textcoords='axes fraction',color='dimgrey',fontsize=8,
                      rotation=0,ha='center',va='center')
     
     ###########################################################################
@@ -396,15 +371,11 @@ for rr in range(len(varnames)):
     
     cbar.set_ticks(barlim)
     cbar.set_ticklabels(list(map(str,barlim)))
-    cbar.ax.tick_params(axis='x', size=.01,labelsize=6)
+    cbar.ax.tick_params(axis='x', size=.01,labelsize=8)
     cbar.outline.set_edgecolor('dimgrey')
     
     plt.tight_layout()
     plt.subplots_adjust(bottom=0.16,wspace=0,hspace=0.01)
     
-    if cps == 'none':
-        plt.savefig(directoryfigure + 'Composites_NUDGE-PAMIP_%s_%s.png' % (period,varnames[rr]),
-                    dpi=300)
-    elif cps == 'yes':        
-        plt.savefig(directoryfigure + 'CPS/Composites_NUDGE-PAMIP_%s_%s.png' % (period,varnames[rr]),
-                    dpi=300)
+    plt.savefig(directoryfigure + 'Composites_NUDGE-E3SM_%s_%s.png' % (period,varnames[rr]),
+                dpi=300)

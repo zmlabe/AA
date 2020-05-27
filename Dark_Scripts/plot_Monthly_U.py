@@ -24,7 +24,7 @@ import read_OldIceExperi as OLD
 import read_LongCoupled as LC
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/SeasonalCycle/'
+directoryfigure = '/home/zlabe/Documents/Projects/AA/Dark_Figures/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -42,7 +42,7 @@ variable = 'U700'
 period = 'timemonth' 
 level = 'surface'
 runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
-            r'$\Delta$WACCM-SIC-Pd',r'$\Delta$S-Coupled-Pd',r'$\Delta$WACCM-SIT-Pd']
+            r'$\Delta$SIC-Pd',r'$\Delta$S-Coupled-Pd',r'$\Delta$SIT-Pd']
 #runnamesdata = ['AA-2030','AA-2060','AA-2090','SIC','SIT','SIC']
 monthstext = [r'OCT',r'NOV',r'DEC',r'JAN',r'FEB',r'MAR']
 letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
@@ -222,18 +222,18 @@ def readData(simu,period,vari,level,latpolar):
     return lat,lon,lev,anommean,nens,pruns,climo
 
 ### Call data
-lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,latpolar)
-lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,latpolar)
-lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,latpolar)
-lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('SIC_Pd',period,variable,level,latpolar)
-lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('coupled_Pd',period,variable,level,latpolar)
-lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIT',period,variable,level,latpolar)
-
-### Chunk data
-dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
-nensall = [nensAA30,nensAA60,nensAA90,nensCOUP,nensTHIC,nensCONC]
-pall =    [prunsAA30,prunsAA60,prunsAA90,prunsCOUP,prunsTHIC,prunsCONC]
-climoall =[climoAA30,climoAA60,climoAA90,climoCOUP,climoTHIC,climoCONC]
+#lat,lon,lev,anomAA30,nensAA30,prunsAA30,climoAA30 = readData('AA-2030',period,variable,level,latpolar)
+#lat,lon,lev,anomAA60,nensAA60,prunsAA60,climoAA60 = readData('AA-2060',period,variable,level,latpolar)
+#lat,lon,lev,anomAA90,nensAA90,prunsAA90,climoAA90 = readData('AA-2090',period,variable,level,latpolar)
+#lat,lon,lev,anomcoup,nensCOUP,prunsCOUP,climoCOUP = readData('SIC_Pd',period,variable,level,latpolar)
+#lat,lon,lev,anomthic,nensTHIC,prunsTHIC,climoTHIC = readData('coupled_Pd',period,variable,level,latpolar)
+#lat,lon,lev,anomconc,nensCONC,prunsCONC,climoCONC = readData('SIT',period,variable,level,latpolar)
+#
+#### Chunk data
+#dataall = [anomAA30,anomAA60,anomAA90,anomcoup,anomthic,anomconc]
+#nensall = [nensAA30,nensAA60,nensAA90,nensCOUP,nensTHIC,nensCONC]
+#pall =    [prunsAA30,prunsAA60,prunsAA90,prunsCOUP,prunsTHIC,prunsCONC]
+#climoall =[climoAA30,climoAA60,climoAA90,climoCOUP,climoTHIC,climoCONC]
 
 ###########################################################################
 ###########################################################################
@@ -241,6 +241,12 @@ climoall =[climoAA30,climoAA60,climoAA90,climoCOUP,climoTHIC,climoCONC]
 ##### Plot profiles
 plt.rc('text',usetex=True)
 plt.rc('font',**{'family':'sans-serif','sans-serif':['Avant Garde']}) 
+plt.rc('savefig',facecolor='black')
+plt.rc('axes',edgecolor='darkgrey')
+plt.rc('xtick',color='white')
+plt.rc('ytick',color='white')
+plt.rc('axes',labelcolor='white')
+plt.rc('axes',facecolor='black')
 
 def adjust_spines(ax, spines):
     for loc, spine in ax.spines.items():
@@ -341,8 +347,8 @@ for i in range(len(runnames)):
                    hatches=['//////'],linewidths=0.4)
     cs.set_cmap(cmap)
     
-    plt.xticks(np.arange(0,6,1),monthstext,fontsize=4)
-    plt.yticks(zscale,map(str,zscale),ha='right',fontsize=6)
+    plt.xticks(np.arange(0,6,1),monthstext,fontsize=4,color='darkgrey')
+    plt.yticks(zscale,map(str,zscale),ha='right',fontsize=6,color='darkgrey')
     
     plt.xlim([0,5])
     plt.ylim([0,90])
@@ -364,12 +370,12 @@ cbar_ax = fig.add_axes([0.33,0.08,0.4,0.03])
 cbar = fig.colorbar(cs,cax=cbar_ax,orientation='horizontal',
                     extend='max',extendfrac=0.07,drawedges=False)
 
-cbar.set_label(label,fontsize=11,color='dimgrey',labelpad=1.4)  
+cbar.set_label(label,fontsize=11,color='w',labelpad=1.4)  
 
 cbar.set_ticks(barlim)
 cbar.set_ticklabels(list(map(str,barlim)))
-cbar.ax.tick_params(axis='x', size=.001,labelsize=7)
-cbar.outline.set_edgecolor('dimgrey')
+cbar.ax.tick_params(axis='x', size=.001,labelsize=7,labelcolor='darkgrey')
+cbar.outline.set_edgecolor('darkgrey')
     
 plt.subplots_adjust(bottom=0.17,hspace=0.08,wspace=0.08)    
 plt.savefig(directoryfigure + 'MonthlyModels_%s_Oct-Apr.png' % variable,dpi=300)
