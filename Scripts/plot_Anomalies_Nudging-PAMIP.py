@@ -48,7 +48,7 @@ letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK','RNET']
 varnames = ['Z500','SLP','THICK','Z50','T2M']
-varnames = ['T2M']
+varnames = ['Z500']
 if cps == 'none':
     runnames = [r'$\Delta$AA-2030',r'$\Delta$AA-2060',r'$\Delta$AA-2090',
                 r'$\Delta$WACCM-SIC-Pd',r'$\Delta$S-Coupled-Pd',r'$\Delta$WACCM-SIT-Pd']
@@ -273,7 +273,7 @@ for rr in range(len(varnames)):
         limit = np.arange(-50,50.1,5)
         barlim = np.arange(-50,51,25)
         cmap = cmocean.cm.balance
-        label = r'\textbf{m}'
+        label = r'\textbf{Z500 [m]}'
     elif varnames[rr] == 'Z50':
         limit = np.arange(-50,50.1,5)
         barlim = np.arange(-50,51,25)

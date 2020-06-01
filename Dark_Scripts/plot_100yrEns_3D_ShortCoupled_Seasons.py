@@ -17,7 +17,7 @@ import calc_Utilities as UT
 import read_ShortCoupled_Type as COUP
 
 ### Define directories
-directoryfigure = '/home/zlabe/Desktop/AA/ENS100/ShortCoupled/'
+directoryfigure = '/home/zlabe/Documents/Projects/AA/Dark_Figures/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -33,8 +33,8 @@ period = 'DJF'
 level = 'surface'
 varnames = ['SLP','Z500','U700','U200','U10',
             'Z50','T2M','T700','T500','THICK','V925']
-varnames = ['Z500']
-runnames = [r'A',r'B',r'C']
+varnames = ['Z50','SLP']
+runnames = [r'a',r'D',r'E']
 letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
 
 ### Function to read in data
@@ -170,8 +170,8 @@ def readData(simu,period,vari,level):
 ### Call functions
 for rr in range(len(varnames)):
     lat,lon,lev,anomA,nensA,prunsA,climoA = readData('a',period,varnames[rr],level)
-    lat,lon,lev,anomB,nensB,prunsB,climoB = readData('b',period,varnames[rr],level)
-    lat,lon,lev,anomC,nensC,prunsC,climoC = readData('c',period,varnames[rr],level)
+    lat,lon,lev,anomB,nensB,prunsB,climoB = readData('D',period,varnames[rr],level)
+    lat,lon,lev,anomC,nensC,prunsC,climoC = readData('E',period,varnames[rr],level)
     
     ### Chunk data
     dataall = [anomA,anomB,anomC]
@@ -185,6 +185,12 @@ for rr in range(len(varnames)):
     ### Plot anomaly composites for each experiment
     plt.rc('text',usetex=True)
     plt.rc('font',**{'family':'sans-serif','sans-serif':['Avant Garde']}) 
+    plt.rc('savefig',facecolor='black')
+    plt.rc('axes',edgecolor='darkgrey')
+    plt.rc('xtick',color='white')
+    plt.rc('ytick',color='white')
+    plt.rc('axes',labelcolor='white')
+    plt.rc('axes',facecolor='black')
     
     ### Set limits for contours and colorbars
     if varnames[rr] == 'T2M':
@@ -208,10 +214,10 @@ for rr in range(len(varnames)):
         cmap = cmocean.cm.balance
         label = r'\textbf{m}'
     elif varnames[rr] == 'Z50':
-        limit = np.arange(-50,50.1,1)
-        barlim = np.arange(-50,51,25)
+        limit = np.arange(-75,75.1,5)
+        barlim = np.arange(-75,76,25)
         cmap = cmocean.cm.balance
-        label = r'\textbf{m}'
+        label = r'\textbf{Z50 [m]}'
     elif varnames[rr] == 'U200':
         limit = np.arange(-5,5.1,0.25)
         barlim = np.arange(-5,6,5)
@@ -243,10 +249,10 @@ for rr in range(len(varnames)):
         cmap = cmocean.cm.balance
         label = r'\textbf{m/s}'
     elif varnames[rr] == 'SLP':
-        limit = np.arange(-3,3.1,0.25)
-        barlim = np.arange(-3,4,3)
+        limit = np.arange(-3,3.1,0.2)
+        barlim = np.arange(-3,4,1)
         cmap = cmocean.cm.balance
-        label = r'\textbf{hPa}'
+        label = r'\textbf{SLP [hPa]}'
     elif varnames[rr] == 'THICK':
         limit = np.arange(-40,40.1,5)
         barlim = np.arange(-40,41,20)
@@ -292,20 +298,20 @@ for rr in range(len(varnames)):
         cs = m.contourf(x,y,var,limit,extend='both')
         cs1 = m.contourf(x,y,pvar,colors='None',hatches=['.....'])
         if varnames[rr] == 'Z50': # the interval is 250 m 
-            cs2 = m.contour(x,y,clim,np.arange(21900,23500,250),
-                            colors='k',linewidths=1.1,zorder=10)
+            cs2 = m.contour(x,y,clim,np.arange(19000,20500,250),
+                            colors='k',linewidths=1.7,zorder=10)
                   
         m.drawcoastlines(color='dimgray',linewidth=0.7)
         if varnames[rr] == 'SST':
             m.fillcontinents(color='dimgray')
                 
         cs.set_cmap(cmap) 
-        ax1.annotate(r'\textbf{$\Delta$S-Coupled-Pd -- [%s]}' % runnames[i],xy=(0,0),xytext=(0.85,0.91),
-                     textcoords='axes fraction',color='k',fontsize=8,
-                     rotation=320,ha='center',va='center')
-        ax1.annotate(r'\textbf{[%s]}' % letters[i],xy=(0,0),xytext=(0.085,0.93),
-                     textcoords='axes fraction',color='dimgrey',fontsize=15,
-                     rotation=0,ha='center',va='center')
+#        ax1.annotate(r'\textbf{$\Delta$S-Coupled-Pd -- [%s]}' % runnames[i],xy=(0,0),xytext=(0.85,0.91),
+#                     textcoords='axes fraction',color='k',fontsize=8,
+#                     rotation=320,ha='center',va='center')
+#        ax1.annotate(r'\textbf{[%s]}' % letters[i],xy=(0,0),xytext=(0.085,0.93),
+#                     textcoords='axes fraction',color='dimgrey',fontsize=15,
+#                     rotation=0,ha='center',va='center')
 #        ax1.annotate(r'\textbf{[%s]}' % nensall[i],xy=(0,0),xytext=(0.98,0.93),
 #                     textcoords='axes fraction',color='dimgrey',fontsize=6,
 #                     rotation=0,ha='center',va='center')
@@ -313,14 +319,14 @@ for rr in range(len(varnames)):
     ###########################################################################
     cbar_ax = fig.add_axes([0.293,0.2,0.4,0.03])             
     cbar = fig.colorbar(cs,cax=cbar_ax,orientation='horizontal',
-                        extend='max',extendfrac=0.07,drawedges=False)
+                        extend='max',extendfrac=0.07,drawedges=True)
     
-    cbar.set_label(label,fontsize=11,color='dimgrey',labelpad=1.4)  
+    cbar.set_label(label,fontsize=11,color='darkgrey',labelpad=1.4)  
     
     cbar.set_ticks(barlim)
     cbar.set_ticklabels(list(map(str,barlim)))
     cbar.ax.tick_params(axis='x', size=.01,labelsize=8)
-    cbar.outline.set_edgecolor('dimgrey')
+    cbar.outline.set_edgecolor('darkgrey')
     
     plt.tight_layout()
     plt.subplots_adjust(bottom=0.16,wspace=0,hspace=0.01)

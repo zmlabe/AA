@@ -68,39 +68,39 @@ def readCOUPs(varid,timeperiod,level,ens):
             totaldirectory = directorydata + experi + '/monthly/'
             filename = totaldirectory + varid + '_1900-2000.nc'
             print('-----------USING SC-WACCM4 SHORT COUPLED EXPERIMENTS (Pre-Industrial)!-----------')
-    elif ens == 'b':
+    elif ens == 'D':
         if timeperiod == 'C_Fu':
-            experi = 'PAMIP-2.3-B'
+            experi = 'PAMIP-2.3-D'
             directorydata = '/seley/ypeings/simu/'
             totaldirectory = directorydata + experi + '/monthly/'
             filename = totaldirectory + varid + '_1900-2000.nc'
             print('-----------USING SC-WACCM4 SHORT COUPLED EXPERIMENTS (Future)!-----------')
         elif timeperiod == 'C_Pd':
-            experi = 'PAMIP-2.1-B'
+            experi = 'PAMIP-2.1-D'
             directorydata = '/seley/ypeings/simu/'
             totaldirectory = directorydata + experi + '/monthly/'
             filename = totaldirectory + varid + '_1900-2000.nc'
             print('-----------USING SC-WACCM4 SHORT COUPLED EXPERIMENTS (Present-Day)!-----------')
         elif timeperiod == 'C_Pi':
-            experi = 'PAMIP-2.2-B'
+            experi = 'PAMIP-2.2-D'
             directorydata = '/seley/ypeings/simu/'
             totaldirectory = directorydata + experi + '/monthly/'
             filename = totaldirectory + varid + '_1900-2000.nc'
             print('-----------USING SC-WACCM4 SHORT COUPLED EXPERIMENTS (Pre-Industrial)!-----------')
-    elif ens == 'c':
+    elif ens == 'E':
         if timeperiod == 'C_Fu':
-            experi = 'PAMIP-2.3-C'
+            experi = 'PAMIP-2.3-E'
             directorydata = '/seley/ypeings/simu/'
             totaldirectory = directorydata + experi + '/monthly/'
             filename = totaldirectory + varid + '_1900-2000.nc'
             print('-----------USING SC-WACCM4 SHORT COUPLED EXPERIMENTS (Future)!-----------')
         elif timeperiod == 'C_Pd':
-            experi = 'PAMIP-2.1-C'
+            experi = 'PAMIP-2.1-E'
             directorydata = '/seley/ypeings/simu/'
             totaldirectory = directorydata + experi + '/monthly/'
             filename = totaldirectory + varid + '_1900-2000.nc'
             print('-----------USING SC-WACCM4 SHORT COUPLED EXPERIMENTS (Present-Day)!-----------')
-        elif timeperiod == 'C_Pi-C':
+        elif timeperiod == 'C_Pi-E':
             experi = 'PAMIP-2.2'
             directorydata = '/seley/ypeings/simu/'
             totaldirectory = directorydata + experi + '/monthly/'

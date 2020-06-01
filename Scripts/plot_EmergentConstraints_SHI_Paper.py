@@ -248,26 +248,27 @@ if variable == 'THICK':
     plt.axhspan(diffshe,diffshr,alpha=1,color='dimgrey',clip_on=False,linewidth=0)
     plt.plot(xaxis,linetrend,linewidth=2,color='k')
     
-    color = cmocean.cm.thermal(np.linspace(0.0,1,len(runnames)))
+    color = cmocean.cm.phase(np.linspace(0.0,0.92,len(runnames)))
+#    color = plt.cm.cubehelix(np.linspace(0.0,1,len(runnames)))
     for i,c in zip(range(len(runnames)),color):
-        plt.scatter(meanPOL[i],meanSHI[i],color=c,s=42,
+        plt.scatter(meanPOL[i],meanSHI[i],color=c,s=52,
                     label=r'\textbf{%s}' % runnames[i],zorder=11,clip_on=False,
                     edgecolor='k',linewidth=0.5)
     leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
                      bbox_to_anchor=(0.935,0.3),fancybox=True,ncol=1,frameon=False,
                      handlelength=0,handletextpad=1)
         
-    color = cmocean.cm.amp(np.linspace(0.3,1.1,len(runnames_E3SM)))
+    color = cmocean.cm.amp_r(np.linspace(0.3,0.7,len(runnames_E3SM)))
     for i,c in zip(range(len(runnames_E3SM)),color):
-        plt.scatter(meanPOL_E3SM[i],meanSHI_E3SM[i],color=c,s=42,
+        plt.scatter(meanPOL_E3SM[i],meanSHI_E3SM[i],color=c,s=52,
                     label=r'\textbf{%s}' % runnames_E3SM[i],zorder=11,clip_on=False,marker='x')   
     leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
                      bbox_to_anchor=(1,0.8),fancybox=True,ncol=1,frameon=False,
                      handlelength=0,handletextpad=1)
     
-    color = cmocean.cm.rain(np.linspace(0.4,0.8,len(runnames_AMIP)))
+    color = cmocean.cm.dense_r(np.linspace(0.2,0.9,len(runnames_AMIP)))
     for i,c in zip(range(len(runnames_AMIP)),color):
-        plt.scatter(POLAMIP_ALL[i],SHIAMIP_ALL[i],color=c,s=42,
+        plt.scatter(POLAMIP_ALL[i],SHIAMIP_ALL[i],color=c,s=52,
                     label=r'\textbf{%s}' % runnames_AMIP[i],zorder=11,
                     clip_on=False,marker='v',edgecolor='k',linewidth=0.5)   
     leg = plt.legend(shadow=False,fontsize=7,loc='upper center',
