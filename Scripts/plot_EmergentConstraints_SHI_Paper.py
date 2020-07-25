@@ -260,14 +260,14 @@ if variable == 'THICK':
                         label=r'\textbf{%s}' % runnames[i],zorder=11,clip_on=False,
                         edgecolor='k',linewidth=0.5)
 
-    plt.scatter(meanPOL[8],meanSHI[8],color='gold',s=52,
+    plt.scatter(meanPOL[8],meanSHI[8],color='gold',s=52,marker='D',
                 label=r'\textbf{%s}' % runnames[8],zorder=11,clip_on=False,
                 edgecolor='k',linewidth=0.5)
     leg = plt.legend(shadow=False,fontsize=8,loc='upper center',
                      bbox_to_anchor=(0.935,0.3),fancybox=True,ncol=1,frameon=False,
                      handlelength=0,handletextpad=1)
         
-    color = cmocean.cm.amp_r(np.linspace(0.3,0.7,len(runnames_E3SM)))
+    color = cmocean.cm.amp_r(np.linspace(0.3,0.8,len(runnames_E3SM)))
     for i,c in zip(range(len(runnames_E3SM)),color):
         plt.scatter(meanPOL_E3SM[i],meanSHI_E3SM[i],color=c,s=52,
                     label=r'\textbf{%s}' % runnames_E3SM[i],zorder=11,clip_on=False,marker='x')   
@@ -275,7 +275,7 @@ if variable == 'THICK':
                      bbox_to_anchor=(1,0.8),fancybox=True,ncol=1,frameon=False,
                      handlelength=0,handletextpad=1)
     
-    color = cmocean.cm.dense_r(np.linspace(0.2,0.9,len(runnames_AMIP)))
+    color = cmocean.cm.ice_r(np.linspace(0.05,0.7,len(runnames_AMIP)))
     for i,c in zip(range(len(runnames_AMIP)),color):
         plt.scatter(POLAMIP_ALL[i],SHIAMIP_ALL[i],color=c,s=52,
                     label=r'\textbf{%s}' % runnames_AMIP[i],zorder=11,
