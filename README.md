@@ -23,6 +23,7 @@ Zachary Labe - [Research Website](http://sites.uci.edu/zlabe/) - [@ZLabe](https:
     
     
 ## Publications
-
++ **Labe, Z.M.**, Y. Peings, and G. Magnusdottir, 2020. The effect of QBO phase on the atmospheric response to projected Arctic sea-ice loss in early winter, *Geophysical Research Letters*, DOI:10.1029/2020GL088583 [[SUMMARY]](https://sites.uci.edu/zlabe/arctic-amplification/)
 
 ## Conferences
++ [1] **Labe, Z.M.** Greater Siberian cooling linked to Arctic mid-tropospheric warming. [[Poster]](https://sites.uci.edu/zlabe/files/2020/08/ZLabe_BigIdeaPoster_AA.pdf)
