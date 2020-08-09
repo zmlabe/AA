@@ -16,7 +16,7 @@ Zachary Labe - [Research Website](http://sites.uci.edu/zlabe/) - [@ZLabe](https:
 + Energy Exascale Earth System Model (E3SMv1) : [[DATA]](https://e3sm.org/data/)
     + Golaz, J. C., Caldwell, P. M., Van Roekel, L. P., Petersen, M. R., Tang, Q., Wolfe, J. D., ... & Baldwin, S. A. (2019). The DOE E3SM coupled model version 1: Overview and evaluation at standard resolution. Journal of Advances in Modeling Earth Systems, doi:10.1029/2018MS001603 [[Publication]](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018MS001603)
 + ERA5 : [[DATA]](https://cds.climate.copernicus.eu/cdsapp#!/home)
-    + Hersbach, H., Bell, B., Berrisford, P., Hirahara, S., Horányi, A., Muñoz‐Sabater, J., ... & Simmons, A. (2020). The ERA5 global reanalysis. Quarterly Journal of the Royal Meteorological Society, doi:10.1002/qj.3803 [[PUBLICATION]](https://rmets.onlinelibrary.wiley.com/doi/full/10.1002/qj.3803)
+    + Hersbach, H., Bell, B., Berrisford, P., Hirahara, S., Horányi, A., Muñoz‐Sabater, J., ... & Simmons, A. (2020). The ERA5 global reanalysis. Quarterly Journal of the Royal Meteorological Society, doi:10.1002/qj.3803 [[Publication]](https://rmets.onlinelibrary.wiley.com/doi/full/10.1002/qj.3803)
 + NCEP/NCAR Reanalysis 1 (R1): [[DATA]](https://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis.html)
     + Kalnay, E., and co-authors, 1996: The NCEP/NCAR 40-year reanalysis project. Bulletin of the American meteorological Society, 77(3), 437-471 [[Publication]](http://journals.ametsoc.org/doi/abs/10.1175/1520-0477(1996)077%3C0437:TNYRP%3E2.0.CO;2)
 + Polar Amplification Model Intercomparison Project (PAMIP) : [[DATA]](https://pcmdi.llnl.gov/CMIP6/ArchiveStatistics/esgf_data_holdings/PAMIP/index.html)
