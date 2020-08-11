@@ -27,7 +27,7 @@ Zachary Labe - [Research Website](http://sites.uci.edu/zlabe/) - [@ZLabe](https:
     
     
 ## Publications
-+ **Labe, Z.M.**, Y. Peings, and G. Magnusdottir, 2020. Warm Arctic, cold Siberia pattern: role of full Arctic amplification versus sea ice loss alone, *Geophysical Research Letters*, DOI:10.1029/2020GL088583 [[SUMMARY]](https://sites.uci.edu/zlabe/arctic-amplification/)
++ **Labe, Z.M.**, Y. Peings, and G. Magnusdottir, 2020. Warm Arctic, cold Siberia pattern: role of full Arctic amplification versus sea ice loss alone, *Geophysical Research Letters*, DOI:10.1029/2020GL088583 [[HTML]](https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2020GL088583)[[BibTeX]](https://sites.uci.edu/zlabe/files/2020/08/ZLabe_AA2020_GRL_BibTeX.pdf)[[SUMMARY]](https://sites.uci.edu/zlabe/arctic-amplification/)
 
 ## Conferences
 + [1] **Labe, Z.M.** Greater Siberian cooling linked to Arctic mid-tropospheric warming. [[Poster]](https://sites.uci.edu/zlabe/files/2020/08/ZLabe_BigIdeaPoster_AA.pdf)
